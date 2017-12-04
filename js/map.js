@@ -74,3 +74,12 @@ var getShuffledArray = function (array) {
 var extractLastArrayElement = function (array) {
   return array.splice(array.length - 1, 1);
 };
+
+/**
+ * Укорачивает исходный массив на произвольное количество элементов
+ * @param {Array} array
+ * @return {Array} - укороченный массив
+ */
+var getRandomLengthArray = function (array) {
+  return array.slice(getRandomInteger(array.length - 1, 1));
+};
