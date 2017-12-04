@@ -50,8 +50,13 @@ var getRandomArrayElement = function (array) {
   return array[getRandomInteger(array.length - 1, 0)];
 };
 
+/**
+ * Перетасовка массива
+ * @param {Array} array
+ * @return {Array} shuffledArray - возвращает перетасованную копию оригинального массива
+ */
 var getShuffledArray = function (array) {
-  var shuffledArray = array.slice(0);
+  var shuffledArray = array.slice();
   for (var i = shuffledArray.length - 1; i >= 0; i--) {
     var j = Math.floor(Math.random() * i + 1);
     var swap = shuffledArray[i];
