@@ -28,7 +28,7 @@ var OFFER_FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'co
 var PIN_X_COORDINATE_MIN = 300;
 var PIN_X_COORDINATE_MAX = 900;
 var PIN_Y_COORDINATE_MIN = 100;
-var PIN_Y_COORDINATE_MIN = 500;
+var PIN_Y_COORDINATE_MAX = 500;
 
 /**
  * Получение случайного целого числа в заданном диапазоне
@@ -64,4 +64,13 @@ var getShuffledArray = function (array) {
     shuffledArray[j] = swap;
   }
   return shuffledArray;
+};
+
+/**
+ * Извлекает последний элемент массива, уменьшает исходный массив
+ * @param {Array} array
+ * @return {*}
+ */
+var extractLastArrayElement = function (array) {
+  return array.splice(array.length - 1, 1);
 };
