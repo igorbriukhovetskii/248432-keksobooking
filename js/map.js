@@ -40,3 +40,12 @@ var getRandomInteger = function (maxValue, minValue) {
   minValue = minValue || 0;
   return Math.floor(Math.random() * (maxValue + 1 - minValue) + minValue);
 };
+
+/**
+ * Получение случайного элемента массива
+ * @param {Array} array
+ * @return {*} - случайный элемент массива
+ */
+var getRandomArrayElement = function (array) {
+  return array[getRandomInteger(array.length - 1, 0)];
+};
