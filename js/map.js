@@ -49,3 +49,14 @@ var getRandomInteger = function (maxValue, minValue) {
 var getRandomArrayElement = function (array) {
   return array[getRandomInteger(array.length - 1, 0)];
 };
+
+var getShuffledArray = function (array) {
+  var shuffledArray = array.slice(0);
+  for (var i = shuffledArray.length - 1; i >= 0; i--) {
+    var j = Math.floor(Math.random() * i + 1);
+    var swap = shuffledArray[i];
+    shuffledArray[i] = shuffledArray[j];
+    shuffledArray[j] = swap;
+  }
+  return shuffledArray;
+};
