@@ -109,7 +109,7 @@ var generatePosts = function () {
       checkout: getRandomArrayElement(CHECKOUT_TIMES),
       features: getRandomLengthArray(getShuffledArray(OFFER_FEATURES)),
       description: '',
-      photos: ''
+      photos: []
     };
     this.location = {
       x: pinXcoordinate,
@@ -120,7 +120,6 @@ var generatePosts = function () {
   for (var i = 0; i < AVATAR_NUMBERS.length; i++) {
     posts.push(new Post());
   }
-};
 
-var map = document.querySelector('.map');
-map.classList.remove('map--faded');
+  return posts;
+};
