@@ -29,6 +29,7 @@ var PIN_X_COORDINATE_MIN = 300;
 var PIN_X_COORDINATE_MAX = 900;
 var PIN_Y_COORDINATE_MIN = 100;
 var PIN_Y_COORDINATE_MAX = 500;
+var PIN_NEEDLE_HEIGHT = 18;
 
 /**
  * Получение случайного целого числа в заданном диапазоне
@@ -122,4 +123,25 @@ var generatePosts = function () {
   }
 
   return posts;
+};
+
+var template = document.querySelector('template');
+var pinTemplate = template.content.querySelector('.map__pin');
+
+/**
+ * Подготовка нового указателя на карте по шаблону
+ * @param {Object} post - элемент сгенерированного массива случайных объявлений
+ * @return {Node} - подготовленный к вставке указатель (пин) на карте
+ */
+var renderMapPin = function (post) {
+  var mapPin = pinTemplate.cloneNode(true);
+  var mapPinImage = mapPin.querySelector('img');
+  var pinOffsetX = mapPinImage.getAttribute('width') / 2;
+  var pinOffsetY = parseInt(mapPinImage.getAttribute('height'), 10) + PIN_NEEDLE_HEIGHT;
+
+  mapPin.style.left = post.location.x - pinOffsetX + 'px';
+  mapPin.style.top = post.location.y - pinOffsetY + 'px';
+  mapPinImage.src = post.author.avatar;
+
+  return mapPin;
 };
