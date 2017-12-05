@@ -241,12 +241,21 @@ var getDocumentFragment = function (data, renderMethod) {
   return fragment;
 };
 
+// Получение карты
 var map = document.querySelector('.map');
+// Получение блока с указателями
 var mapPinsBlock = map.querySelector('.map__pins');
+// Отключение затемнения карты
 map.classList.remove('map--faded');
+// Генерирование массива случайных объявлений
 var posts = generatePosts();
+// Формирование фрагмента с указателями на карте
 var mapPinsFragment = getDocumentFragment(posts, renderMapPin);
+// Добавление фрагмента с указателями на страницу
 mapPinsBlock.appendChild(mapPinsFragment);
+// Формирования карточки с описанием объявления
 var card = getDocumentFragment(posts[0], renderCard);
+// Получение контейнера блока фильтров
 var mapFilters = map.querySelector('map__filters-container');
+// Добавление карточки с описанием объявления на страницу
 map.insertBefore(card, mapFilters);
