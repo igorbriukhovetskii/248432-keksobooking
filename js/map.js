@@ -247,3 +247,6 @@ map.classList.remove('map--faded');
 var posts = generatePosts();
 var mapPinsFragment = getDocumentFragment(posts, renderMapPin);
 mapPinsBlock.appendChild(mapPinsFragment);
+var card = getDocumentFragment(posts[0], renderCard);
+var mapFilters = map.querySelector('map__filters-container');
+map.insertBefore(card, mapFilters);
