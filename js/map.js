@@ -145,3 +145,27 @@ var renderMapPin = function (post) {
 
   return mapPin;
 };
+
+
+/**
+ * Подготовка элементов по шаблону и вставка их в DOM
+ * @param {Array} postsArray - сгенерированный массив объявлений
+ * @param {Function} renderMethod - функция подготавливающая к вставке отдельные элементы по шаблону
+ * @return {DocumentFragment} - готовый к вставке в DOM фрагмент
+ */
+var getDocumentFragment = function (postsArray, renderMethod) {
+  var fragment = document.createDocumentFragment();
+
+  postsArray.forEach(function (post) {
+    fragment.appendChild(renderMethod(post));
+  });
+
+  return fragment;
+};
+
+var map = document.querySelector('.map');
+var mapPinsBlock = map.querySelector('.map__pins');
+map.classList.remove('map--faded');
+var posts = generatePosts();
+var mapPinsFragment = getDocumentFragment(posts, renderMapPin);
+mapPinsBlock.appendChild(mapPinsFragment);
