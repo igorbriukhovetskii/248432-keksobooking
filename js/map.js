@@ -92,35 +92,37 @@ var generatePosts = function () {
   var avatarNumbers = getShuffledArray(AVATAR_NUMBERS);
   var offerTitles = getShuffledArray(OFFER_TITLES);
 
-  // Функция конструктор объявления
-  var Post = function () {
+  // Генерация объявления
+  var getPost = function () {
     var pinXcoordinate = getRandomInteger(PIN_X_COORDINATE_MAX, PIN_X_COORDINATE_MIN);
     var pinYcoordinate = getRandomInteger(PIN_Y_COORDINATE_MAX, PIN_Y_COORDINATE_MIN);
 
-    this.author = {
-      avatar: 'img/avatars/user' + extractLastArrayElement(avatarNumbers) + '.png'
-    };
-    this.offer = {
-      title: extractLastArrayElement(offerTitles),
-      address: '\'' + pinXcoordinate + ', ' + pinYcoordinate + '\'',
-      price: getRandomInteger(OFFER_MAX_PRICE, OFFER_MIN_PRICE),
-      type: getRandomArrayElement(OFFER_TYPES),
-      rooms: getRandomInteger(OFFER_MAX_ROOM_NUMBER, OFFER_MIN_ROOM_NUMBER),
-      guests: getRandomInteger(GUESTS_MAX_NUMBER, GUESTS_MIN_NUMBER),
-      checkin: getRandomArrayElement(CHECKIN_TIMES),
-      checkout: getRandomArrayElement(CHECKOUT_TIMES),
-      features: getRandomLengthArray(getShuffledArray(OFFER_FEATURES)),
-      description: '',
-      photos: []
-    };
-    this.location = {
-      x: pinXcoordinate,
-      y: pinYcoordinate
+    return {
+      author: {
+        avatar: 'img/avatars/user' + extractLastArrayElement(avatarNumbers) + '.png'
+      },
+      offer: {
+        title: extractLastArrayElement(offerTitles),
+        address: '\'' + pinXcoordinate + ', ' + pinYcoordinate + '\'',
+        price: getRandomInteger(OFFER_MAX_PRICE, OFFER_MIN_PRICE),
+        type: getRandomArrayElement(OFFER_TYPES),
+        rooms: getRandomInteger(OFFER_MAX_ROOM_NUMBER, OFFER_MIN_ROOM_NUMBER),
+        guests: getRandomInteger(GUESTS_MAX_NUMBER, GUESTS_MIN_NUMBER),
+        checkin: getRandomArrayElement(CHECKIN_TIMES),
+        checkout: getRandomArrayElement(CHECKOUT_TIMES),
+        features: getRandomLengthArray(getShuffledArray(OFFER_FEATURES)),
+        description: '',
+        photos: []
+      },
+      location: {
+        x: getRandomInteger(PIN_X_COORDINATE_MAX, PIN_X_COORDINATE_MIN),
+        y: getRandomInteger(PIN_Y_COORDINATE_MAX, PIN_Y_COORDINATE_MIN)
+      }
     };
   };
 
   for (var i = 0; i < AVATAR_NUMBERS.length; i++) {
-    posts.push(new Post());
+    posts.push(getPost());
   }
 
   return posts;
