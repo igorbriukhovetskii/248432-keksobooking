@@ -245,10 +245,27 @@ var getDocumentFragment = function (data, renderMethod) {
 
 // Получение карты
 var map = document.querySelector('.map');
+
+// Отключение затемнения карты
+var showMap = function () {
+  map.classList.remove('map--faded');
+};
+
+// Получение формы объявления
+var noticeForm = document.querySelector('.notice__form');
+// Получение 
+var noticeFormFieldsets = noticeForm.querySelectorAll('fieldset');
+
+var disableForm = function () {
+  noticeForm.classList.add('notice__form--disabled');
+  noticeFormFieldsets.forEach(function (fieldset) {
+    fieldset.disabled = true;
+  });
+};
+
+disableForm();
 // Получение блока с указателями
 var mapPinsBlock = map.querySelector('.map__pins');
-// Отключение затемнения карты
-map.classList.remove('map--faded');
 // Генерирование массива случайных объявлений
 var posts = generatePosts();
 // Формирование фрагмента с указателями на карте
