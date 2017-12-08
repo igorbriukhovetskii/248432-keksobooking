@@ -253,17 +253,18 @@ var showMap = function () {
 
 // Получение формы объявления
 var noticeForm = document.querySelector('.notice__form');
-// Получение 
+// Получение блоков fieldset в форме объявления
 var noticeFormFieldsets = noticeForm.querySelectorAll('fieldset');
 
-var disableForm = function () {
+// Деактивация формы объявления
+var disableNoticeForm = function () {
   noticeForm.classList.add('notice__form--disabled');
   noticeFormFieldsets.forEach(function (fieldset) {
     fieldset.disabled = true;
   });
 };
 
-disableForm();
+disableNoticeForm();
 // Получение блока с указателями
 var mapPinsBlock = map.querySelector('.map__pins');
 // Генерирование массива случайных объявлений
