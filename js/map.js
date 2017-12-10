@@ -279,6 +279,19 @@ var onMapPinMainMouseup = function () {
   toggleNoticeFormActivityStatus(true);
 };
 
+/**
+ * Добавление обработчика события
+ * @param {Node} element - элемент на который вешается обработчик
+ * @param {Event} eventType - обрабатываемое событие
+ * @param {Function} handler - обработчик
+ */
+var addEventListener = function (element, eventType, handler) {
+  element.addEventListener(eventType, handler);
+};
+
+toggleNoticeFormActivityStatus(false);
+addEventListener(mapPinMain, 'mouseup', onMapPinMainMouseup);
+
 // Получение блока с указателями
 var mapPinsBlock = map.querySelector('.map__pins');
 // Генерирование массива случайных объявлений
