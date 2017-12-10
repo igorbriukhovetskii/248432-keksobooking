@@ -270,6 +270,15 @@ var toggleNoticeFormActivityStatus = function (flag) {
   });
 };
 
+// Получение главного указателя карты
+var mapPinMain = map.querySelector('.map__pin--main');
+
+// Обработчик события mouseup на главном указателе карты
+var onMapPinMainMouseup = function () {
+  toggleMapFading(false);
+  toggleNoticeFormActivityStatus(true);
+};
+
 // Получение блока с указателями
 var mapPinsBlock = map.querySelector('.map__pins');
 // Генерирование массива случайных объявлений
