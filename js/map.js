@@ -259,6 +259,17 @@ var noticeForm = document.querySelector('.notice__form');
 // Получение блоков fieldset в форме объявления
 var noticeFormFieldsets = noticeForm.querySelectorAll('fieldset');
 
+/**
+ * Переключение статуса активности формы объявления
+ * @param {boolean} flag - true для включения формы
+ */
+var toggleNoticeFormActivityStatus = function (flag) {
+  noticeForm.classList.toggle('notice__form--disabled', !flag);
+  noticeFormFieldsets.forEach(function (fieldset) {
+    fieldset.disabled = !flag;
+  });
+};
+
 // Получение блока с указателями
 var mapPinsBlock = map.querySelector('.map__pins');
 // Генерирование массива случайных объявлений
