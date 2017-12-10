@@ -134,9 +134,10 @@ var pinTemplate = template.content.querySelector('.map__pin');
 /**
  * Подготовка нового указателя на карте по шаблону
  * @param {Object} post - элемент сгенерированного массива случайных объявлений
+ * @param {number} index - индекс указателя, соответствует индексу объявления в массиве случайных объявлений
  * @return {Node} - подготовленный к вставке указатель (пин) на карте
  */
-var renderMapPin = function (post) {
+var renderMapPin = function (post, index) {
   var mapPin = pinTemplate.cloneNode(true);
   var mapPinImage = mapPin.querySelector('img');
   var pinOffsetX = mapPinImage.getAttribute('width') / 2;
@@ -145,6 +146,7 @@ var renderMapPin = function (post) {
   mapPin.style.left = post.location.x - pinOffsetX + 'px';
   mapPin.style.top = post.location.y - pinOffsetY + 'px';
   mapPinImage.src = post.author.avatar;
+  mapPin.dataset.index = index;
 
   return mapPin;
 };
@@ -156,7 +158,7 @@ var cardTemplate = template.content.querySelector('.map__card');
  * @param {Object} post - элемент сгенерированного массива случайных объявлений
  * @return {Node} - продготовленная к вставке в DOM карточка объявления
  */
-var renderCard = function (post) {
+var renderNoticeCard = function (post) {
   var card = cardTemplate.cloneNode(true);
   var cardAvatar = card.querySelector('img');
   var cardParagraphs = card.querySelectorAll('p');
@@ -236,8 +238,8 @@ var getDocumentFragment = function (data, renderMethod) {
   data = data.length ? data : [data];
   var fragment = document.createDocumentFragment();
 
-  data.forEach(function (dataItem) {
-    fragment.appendChild(renderMethod(dataItem));
+  data.forEach(function (dataItem, index) {
+    fragment.appendChild(renderMethod(dataItem, index));
   });
 
   return fragment;
@@ -274,17 +276,40 @@ var toggleNoticeFormActivityStatus = function (flag) {
 var mapPinMain = map.querySelector('.map__pin--main');
 // Получение блока с указателями
 var mapPinsBlock = map.querySelector('.map__pins');
+// Получение контейнера блока фильтров
+var mapFilters = map.querySelector('map__filters-container');
 // Генерирование массива случайных объявлений
 var posts = generatePosts();
+// Карточки объявлений
+var noticeCardsPopups;
 
 // Обработчик события mouseup на главном указателе карты
 var onMapPinMainMouseup = function () {
+  // Отключение затемнения карты
   toggleMapFading(false);
+  // Активация полей формы
   toggleNoticeFormActivityStatus(true);
   // Формирование фрагмента с указателями на карте
   var mapPinsFragment = getDocumentFragment(posts, renderMapPin);
   // Добавление фрагмента с указателями на страницу
   mapPinsBlock.appendChild(mapPinsFragment);
+  // Создание массива карточек объявлений, добавление его в DOM, и получение коллекции с карточками из DOM
+  noticeCardsPopups = getNoticeCards();
+  removeEventListener(mapPinMain, 'mouseup', onMapPinMainMouseup);
+};
+
+// Создание массива карточек объявлений, добавление его в DOM, и получение коллекции с карточками из DOM
+var getNoticeCards = function () {
+  // Формирование фрагмента с карточками объявлений
+  var cards = getDocumentFragment(posts, renderNoticeCard);
+  // Добавление фрагмента с карточками на страницу
+  map.insertBefore(cards, mapFilters);
+  // Получение карточек
+  var popups = map.querySelectorAll('.popup');
+  // Скрытие карточек
+  toggleNoticeCardVisibility(popups, false);
+
+  return popups;
 };
 
 /**
@@ -292,17 +317,64 @@ var onMapPinMainMouseup = function () {
  * @param {Object} event
  */
 var onMapPinClick = function (event) {
+  activateMapPin(event, noticeCardsPopups);
+};
+
+/**
+ * Активация указателя на карте
+ * @param {Object} event
+ * @param {Array} noticeCards - массив с карточками объявлений
+ */
+var activateMapPin = function (event, noticeCards) {
+  // Деактивация ранее активированного указателя
+  deactivateMapPin();
   var target = event.target;
+  var targetParent = target.parentElement;
+  var currentPin;
+
+  // При клике на любой указатель, кроме главного. Активация указателя и показ соответствующей карточки
+  if (targetParent.classList.contains('map__pin') && !targetParent.classList.contains('map__pin--main')) {
+    currentPin = targetParent;
+    currentPin.classList.add('map__pin--active');
+    var index = currentPin.dataset.index;
+    // Скрытие всех карточек
+    toggleNoticeCardVisibility(noticeCards, false);
+    // Показ карточки, связанной с этим указателем
+    toggleNoticeCardVisibility(noticeCards[index], true);
+  }
+
+  // При клике на главный указатель. Активация указателя и скрытие карточек объявления
+  if (targetParent.classList.contains('map__pin--main')) {
+    currentPin = targetParent;
+    currentPin.classList.add('map__pin--active');
+    // Скрытие карточек объявления
+    toggleNoticeCardVisibility(noticeCards, false);
+  }
+};
+
+// Деактивация указателя на карте
+var deactivateMapPin = function () {
+  // Проверка наличия активного указателя
   var activePin = mapPinsBlock.querySelector('.map__pin--active');
 
   if (activePin) {
     activePin.classList.remove('map__pin--active');
+    // Отключение видимости карточек объявления
+    toggleNoticeCardVisibility(noticeCardsPopups, false);
   }
+};
 
-  if (target.parentElement.classList.contains('map__pin')) {
-    var currentPin = event.target.parentElement;
-    currentPin.classList.add('map__pin--active');
-  }
+/**
+ * Переключение видимости элементов массива карточек объявлений
+ * @param {Array} cards - массив карточек с подробностями объявлений
+ * @param {boolean} flag - true для включения видимости элемента
+ */
+var toggleNoticeCardVisibility = function (cards, flag) {
+  cards = cards.length ? cards : [cards];
+
+  cards.forEach(function (card) {
+    card.classList.toggle('hidden', !flag);
+  });
 };
 
 /**
@@ -315,13 +387,16 @@ var addEventListener = function (element, eventType, handler) {
   element.addEventListener(eventType, handler);
 };
 
+/**
+ * Удаление обработчика события
+ * @param {Element} element - элемент с которого снимается обработчик
+ * @param {Event} eventType - обрабатываемое событие
+ * @param {Function} handler - обработчик
+ */
+var removeEventListener = function (element, eventType, handler) {
+  element.removeEventListener(eventType, handler);
+};
+
 toggleNoticeFormActivityStatus(false);
 addEventListener(mapPinMain, 'mouseup', onMapPinMainMouseup);
 addEventListener(mapPinsBlock, 'click', onMapPinClick);
-
-// Формирования карточки с описанием объявления
-// var card = getDocumentFragment(posts[0], renderCard);
-// Получение контейнера блока фильтров
-// var mapFilters = map.querySelector('map__filters-container');
-// Добавление карточки с описанием объявления на страницу
-// map.insertBefore(card, mapFilters);
