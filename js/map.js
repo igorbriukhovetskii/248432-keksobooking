@@ -272,16 +272,42 @@ var toggleNoticeFormActivityStatus = function (flag) {
 
 // Получение главного указателя карты
 var mapPinMain = map.querySelector('.map__pin--main');
+// Получение блока с указателями
+var mapPinsBlock = map.querySelector('.map__pins');
+// Генерирование массива случайных объявлений
+var posts = generatePosts();
 
 // Обработчик события mouseup на главном указателе карты
 var onMapPinMainMouseup = function () {
   toggleMapFading(false);
   toggleNoticeFormActivityStatus(true);
+  // Формирование фрагмента с указателями на карте
+  var mapPinsFragment = getDocumentFragment(posts, renderMapPin);
+  // Добавление фрагмента с указателями на страницу
+  mapPinsBlock.appendChild(mapPinsFragment);
+};
+
+/**
+ * Обработчик события click на указателе карты
+ * @param {Object} event
+ */
+var onMapPinClick = function (event) {
+  var target = event.target;
+  var activePin = mapPinsBlock.querySelector('.map__pin--active');
+
+  if (activePin) {
+    activePin.classList.remove('map__pin--active');
+  }
+
+  if (target.parentElement.classList.contains('map__pin')) {
+    var currentPin = event.target.parentElement;
+    currentPin.classList.add('map__pin--active');
+  }
 };
 
 /**
  * Добавление обработчика события
- * @param {Node} element - элемент на который вешается обработчик
+ * @param {Element} element - элемент на который вешается обработчик
  * @param {Event} eventType - обрабатываемое событие
  * @param {Function} handler - обработчик
  */
@@ -291,18 +317,11 @@ var addEventListener = function (element, eventType, handler) {
 
 toggleNoticeFormActivityStatus(false);
 addEventListener(mapPinMain, 'mouseup', onMapPinMainMouseup);
+addEventListener(mapPinsBlock, 'click', onMapPinClick);
 
-// Получение блока с указателями
-var mapPinsBlock = map.querySelector('.map__pins');
-// Генерирование массива случайных объявлений
-var posts = generatePosts();
-// Формирование фрагмента с указателями на карте
-var mapPinsFragment = getDocumentFragment(posts, renderMapPin);
-// Добавление фрагмента с указателями на страницу
-mapPinsBlock.appendChild(mapPinsFragment);
 // Формирования карточки с описанием объявления
-var card = getDocumentFragment(posts[0], renderCard);
+// var card = getDocumentFragment(posts[0], renderCard);
 // Получение контейнера блока фильтров
-var mapFilters = map.querySelector('map__filters-container');
+// var mapFilters = map.querySelector('map__filters-container');
 // Добавление карточки с описанием объявления на страницу
-map.insertBefore(card, mapFilters);
+// map.insertBefore(card, mapFilters);
