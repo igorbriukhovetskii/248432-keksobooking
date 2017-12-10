@@ -246,9 +246,12 @@ var getDocumentFragment = function (data, renderMethod) {
 // Получение карты
 var map = document.querySelector('.map');
 
-// Отключение затемнения карты
-var showMap = function () {
-  map.classList.remove('map--faded');
+/**
+ * Включение или отключение затемнения карты
+ * @param {boolean} flag - true для затемнения карты
+ */
+var toggleMapFading = function (flag) {
+  map.classList.toggle('map--faded', flag);
 };
 
 // Получение формы объявления
@@ -256,15 +259,6 @@ var noticeForm = document.querySelector('.notice__form');
 // Получение блоков fieldset в форме объявления
 var noticeFormFieldsets = noticeForm.querySelectorAll('fieldset');
 
-// Деактивация формы объявления
-var disableNoticeForm = function () {
-  noticeForm.classList.add('notice__form--disabled');
-  noticeFormFieldsets.forEach(function (fieldset) {
-    fieldset.disabled = true;
-  });
-};
-
-disableNoticeForm();
 // Получение блока с указателями
 var mapPinsBlock = map.querySelector('.map__pins');
 // Генерирование массива случайных объявлений
