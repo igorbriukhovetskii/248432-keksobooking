@@ -249,12 +249,9 @@ var getDocumentFragment = function (data, renderMethod) {
 // Получение карты
 var map = document.querySelector('.map');
 
-/**
- * Включение или отключение затемнения карты
- * @param {boolean} flag - true для затемнения карты
- */
-var toggleMapFading = function (flag) {
-  map.classList.toggle('map--faded', flag);
+// Отключение затемнения карты
+var removeMapFading = function () {
+  map.classList.remove('map--faded');
 };
 
 // Получение формы объявления
@@ -262,14 +259,11 @@ var noticeForm = document.querySelector('.notice__form');
 // Получение блоков fieldset в форме объявления
 var noticeFormFieldsets = noticeForm.querySelectorAll('fieldset');
 
-/**
- * Переключение статуса активности формы объявления
- * @param {boolean} flag - true для включения формы
- */
-var toggleNoticeFormActivityStatus = function (flag) {
-  noticeForm.classList.toggle('notice__form--disabled', !flag);
+// Активация формы объявления
+var activateNoticeForm = function () {
+  noticeForm.classList.remove('notice__form--disabled');
   noticeFormFieldsets.forEach(function (fieldset) {
-    fieldset.disabled = !flag;
+    fieldset.disabled = false;
   });
 };
 
@@ -285,9 +279,9 @@ var posts = generatePosts();
 // Обработчик события mouseup на главном указателе карты
 var onMapPinMainMouseUp = function () {
   // Отключение затемнения карты
-  toggleMapFading(false);
+  removeMapFading();
   // Активация полей формы
-  toggleNoticeFormActivityStatus(true);
+  activateNoticeForm();
   // Формирование фрагмента с указателями на карте
   var mapPinsFragment = getDocumentFragment(posts, renderMapPin);
   // Добавление фрагмента с указателями на страницу
@@ -418,5 +412,4 @@ var removeEventListener = function (element, eventType, handler) {
   element.removeEventListener(eventType, handler);
 };
 
-toggleNoticeFormActivityStatus(false);
 addEventListener(mapPinMain, 'mouseup', onMapPinMainMouseUp);
