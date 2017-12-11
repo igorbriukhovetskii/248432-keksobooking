@@ -283,7 +283,7 @@ var mapFilters = map.querySelector('map__filters-container');
 var posts = generatePosts();
 
 // Обработчик события mouseup на главном указателе карты
-var onMapPinMainMouseup = function () {
+var onMapPinMainMouseUp = function () {
   // Отключение затемнения карты
   toggleMapFading(false);
   // Активация полей формы
@@ -293,7 +293,7 @@ var onMapPinMainMouseup = function () {
   // Добавление фрагмента с указателями на страницу
   mapPinsBlock.appendChild(mapPinsFragment);
   addEventListener(mapPinsBlock, 'click', onMapPinClick);
-  removeEventListener(mapPinMain, 'mouseup', onMapPinMainMouseup);
+  removeEventListener(mapPinMain, 'mouseup', onMapPinMainMouseUp);
 };
 
 // Создание карточки объявления, добавление её в DOM
@@ -337,9 +337,9 @@ var onMapPinClick = function (event) {
  */
 var activateMapPin = function (event) {
   var target = event.target;
-  var currentPin = target.parentElement;
+  var currentPin = target.closest('.map__pin');
 
-  if (currentPin.classList.contains('map__pin')) {
+  if (currentPin) {
     currentPin.classList.add('map__pin--active');
   }
 };
@@ -347,13 +347,12 @@ var activateMapPin = function (event) {
 // Деактивация указателя на карте
 var deactivateMapPin = function (event) {
   var target = event.target;
-  var targetParent = target.parentElement;
   // Проверка наличия активного указателя
   var activePin = mapPinsBlock.querySelector('.map__pin--active');
   // Условие декативации указателя: событие произошло на указателе или на кнопке закрытия карточки объявления
-  var eventTargetCondition = (targetParent.classList.contains('map__pin') || target.classList.contains('popup__close'));
+  var eventTargetCondition = (target.closest('.map__pin') || target.classList.contains('popup__close'));
   // Условие деактивации указателя: нажата клавиша ESC
-  var eventKeycodeCondition = (event.keycode === ESC_KEYCODE);
+  var eventKeycodeCondition = (event.keyCode === ESC_KEYCODE);
 
   if (activePin && eventTargetCondition || eventKeycodeCondition) {
     activePin.classList.remove('map__pin--active');
@@ -374,8 +373,10 @@ var onPopupCloseClick = function (event) {
  * @param {Object} event
  */
 var onEscapeButtonKeydown = function (event) {
-  removeNoticeCard();
-  deactivateMapPin(event);
+  if (event.keyCode === ESC_KEYCODE) {
+    removeNoticeCard();
+    deactivateMapPin(event);
+  }
 };
 
 // Подключение процедуры закрытия окна карточки объявления
@@ -400,7 +401,7 @@ var disablePopupClose = function () {
 /**
  * Добавление обработчика события
  * @param {Element} element - элемент на который вешается обработчик
- * @param {Event} eventType - обрабатываемое событие
+ * @param {string} eventType - обрабатываемое событие
  * @param {Function} handler - обработчик
  */
 var addEventListener = function (element, eventType, handler) {
@@ -410,7 +411,7 @@ var addEventListener = function (element, eventType, handler) {
 /**
  * Удаление обработчика события
  * @param {Element} element - элемент с которого снимается обработчик
- * @param {Event} eventType - обрабатываемое событие
+ * @param {string} eventType - обрабатываемое событие
  * @param {Function} handler - обработчик
  */
 var removeEventListener = function (element, eventType, handler) {
@@ -418,4 +419,4 @@ var removeEventListener = function (element, eventType, handler) {
 };
 
 toggleNoticeFormActivityStatus(false);
-addEventListener(mapPinMain, 'mouseup', onMapPinMainMouseup);
+addEventListener(mapPinMain, 'mouseup', onMapPinMainMouseUp);
