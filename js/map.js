@@ -272,7 +272,7 @@ var mapPinMain = map.querySelector('.map__pin--main');
 // Получение блока с указателями
 var mapPinsBlock = map.querySelector('.map__pins');
 // Получение контейнера блока фильтров
-var mapFilters = map.querySelector('map__filters-container');
+var mapFilters = map.querySelector('.map__filters-container');
 // Генерирование массива случайных объявлений
 var posts = generatePosts();
 
@@ -378,7 +378,6 @@ var enablePopupClose = function () {
   var popup = map.querySelector('.popup');
   var popupCloseButton = popup.querySelector('.popup__close');
 
-  popupCloseButton.focus();
   addEventListener(popupCloseButton, 'click', onPopupCloseClick);
   addEventListener(document, 'keydown', onEscapeButtonKeydown);
 };
