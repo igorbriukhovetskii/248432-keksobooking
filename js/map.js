@@ -31,6 +31,7 @@ var PIN_X_COORDINATE_MAX = 900;
 var PIN_Y_COORDINATE_MIN = 100;
 var PIN_Y_COORDINATE_MAX = 500;
 var PIN_NEEDLE_HEIGHT = 18;
+var ESC_KEYCODE = 27;
 
 /**
  * Получение случайного целого числа в заданном диапазоне
@@ -305,6 +306,7 @@ var addNoticeCard = function () {
     var card = getDocumentFragment(posts[index], renderNoticeCard);
     // Добавление фрагмента с карточкой на страницу
     map.insertBefore(card, mapFilters);
+    enablePopupClose();
   }
 };
 
@@ -322,7 +324,7 @@ var removeNoticeCard = function () {
  * @param {Object} event
  */
 var onMapPinClick = function (event) {
-  deactivateMapPin();
+  deactivateMapPin(event);
   removeNoticeCard();
   activateMapPin(event);
   addNoticeCard();
@@ -342,14 +344,49 @@ var activateMapPin = function (event) {
 };
 
 // Деактивация указателя на карте
-var deactivateMapPin = function () {
+var deactivateMapPin = function (event) {
+  var target = event.target;
+  var targetParent = target.parentElement;
   // Проверка наличия активного указателя
   var activePin = mapPinsBlock.querySelector('.map__pin--active');
+  // Условие декативации указателя: событие произошло на указателе или на кнопке закрытия карточки объявления
+  var eventTargetCondition = (targetParent.classList.contains('map__pin') || target.classList.contains('popup__close'));
+  // Условие деактивации указателя: нажата клавиша ESC
+  var eventKeycodeCondition = (event.keycode === ESC_KEYCODE);
 
-  if (activePin) {
+  if (activePin && eventTargetCondition || eventKeycodeCondition) {
     activePin.classList.remove('map__pin--active');
   }
 };
+
+/**
+ * Обаботчик клика по кнопке закрытия окна карточки объявления
+ * @param {Object} event
+ */
+var onPopupCloseClick = function (event) {
+  removeNoticeCard();
+  deactivateMapPin(event);
+};
+
+/**
+ * Обработчик нажатия клавиши escape
+ * @param {Object} event
+ */
+var onEscapeButtonPress = function (event) {
+  removeNoticeCard();
+  deactivateMapPin(event);
+};
+
+// Подключение процедуры закрытия окна карточки объявления
+var enablePopupClose = function () {
+  var popup = map.querySelector('.popup');
+  var popupCloseButton = popup.querySelector('.popup__close');
+
+  popupCloseButton.focus();
+  addEventListener(popupCloseButton, 'click', onPopupCloseClick);
+  addEventListener(document, 'keydown', onEscapeButtonPress);
+};
+
 
 /**
  * Добавление обработчика события
