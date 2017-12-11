@@ -315,6 +315,7 @@ var removeNoticeCard = function () {
   var card = map.querySelector('.popup');
 
   if (card) {
+    disablePopupClose();
     map.removeChild(card);
   }
 };
@@ -372,7 +373,7 @@ var onPopupCloseClick = function (event) {
  * Обработчик нажатия клавиши escape
  * @param {Object} event
  */
-var onEscapeButtonPress = function (event) {
+var onEscapeButtonKeydown = function (event) {
   removeNoticeCard();
   deactivateMapPin(event);
 };
@@ -384,9 +385,17 @@ var enablePopupClose = function () {
 
   popupCloseButton.focus();
   addEventListener(popupCloseButton, 'click', onPopupCloseClick);
-  addEventListener(document, 'keydown', onEscapeButtonPress);
+  addEventListener(document, 'keydown', onEscapeButtonKeydown);
 };
 
+// Удаление обработчиков событий и отключение механизма закрытик окна карточки объявления
+var disablePopupClose = function () {
+  var popup = map.querySelector('.popup');
+  var popupCloseButton = popup.querySelector('.popup__close');
+
+  removeEventListener(popupCloseButton, 'click', onPopupCloseClick);
+  removeEventListener(document, 'keydown', onEscapeButtonKeydown);
+};
 
 /**
  * Добавление обработчика события
