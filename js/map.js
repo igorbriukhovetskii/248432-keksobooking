@@ -280,8 +280,6 @@ var mapPinsBlock = map.querySelector('.map__pins');
 var mapFilters = map.querySelector('map__filters-container');
 // Генерирование массива случайных объявлений
 var posts = generatePosts();
-// Карточки объявлений
-var noticeCardsPopups;
 
 // Обработчик события mouseup на главном указателе карты
 var onMapPinMainMouseup = function () {
@@ -293,23 +291,30 @@ var onMapPinMainMouseup = function () {
   var mapPinsFragment = getDocumentFragment(posts, renderMapPin);
   // Добавление фрагмента с указателями на страницу
   mapPinsBlock.appendChild(mapPinsFragment);
-  // Создание массива карточек объявлений, добавление его в DOM, и получение коллекции с карточками из DOM
-  noticeCardsPopups = getNoticeCards();
+  addEventListener(mapPinsBlock, 'click', onMapPinClick);
   removeEventListener(mapPinMain, 'mouseup', onMapPinMainMouseup);
 };
 
-// Создание массива карточек объявлений, добавление его в DOM, и получение коллекции с карточками из DOM
-var getNoticeCards = function () {
-  // Формирование фрагмента с карточками объявлений
-  var cards = getDocumentFragment(posts, renderNoticeCard);
-  // Добавление фрагмента с карточками на страницу
-  map.insertBefore(cards, mapFilters);
-  // Получение карточек
-  var popups = map.querySelectorAll('.popup');
-  // Скрытие карточек
-  toggleNoticeCardVisibility(popups, false);
+// Создание карточки объявления, добавление её в DOM
+var addNoticeCard = function () {
+  var activePin = mapPinsBlock.querySelector('.map__pin--active');
 
-  return popups;
+  if (activePin && !activePin.classList.contains('map__pin--main')) {
+    var index = activePin.dataset.index;
+    // Формирование фрагмента с карточкой объявления
+    var card = getDocumentFragment(posts[index], renderNoticeCard);
+    // Добавление фрагмента с карточкой на страницу
+    map.insertBefore(card, mapFilters);
+  }
+};
+
+// Удаление карточки объявления
+var removeNoticeCard = function () {
+  var card = map.querySelector('.popup');
+
+  if (card) {
+    map.removeChild(card);
+  }
 };
 
 /**
@@ -317,38 +322,22 @@ var getNoticeCards = function () {
  * @param {Object} event
  */
 var onMapPinClick = function (event) {
-  activateMapPin(event, noticeCardsPopups);
+  deactivateMapPin();
+  removeNoticeCard();
+  activateMapPin(event);
+  addNoticeCard();
 };
 
 /**
  * Активация указателя на карте
  * @param {Object} event
- * @param {Array} noticeCards - массив с карточками объявлений
  */
-var activateMapPin = function (event, noticeCards) {
-  // Деактивация ранее активированного указателя
-  deactivateMapPin();
+var activateMapPin = function (event) {
   var target = event.target;
-  var targetParent = target.parentElement;
-  var currentPin;
+  var currentPin = target.parentElement;
 
-  // При клике на любой указатель, кроме главного. Активация указателя и показ соответствующей карточки
-  if (targetParent.classList.contains('map__pin') && !targetParent.classList.contains('map__pin--main')) {
-    currentPin = targetParent;
+  if (currentPin.classList.contains('map__pin')) {
     currentPin.classList.add('map__pin--active');
-    var index = currentPin.dataset.index;
-    // Скрытие всех карточек
-    toggleNoticeCardVisibility(noticeCards, false);
-    // Показ карточки, связанной с этим указателем
-    toggleNoticeCardVisibility(noticeCards[index], true);
-  }
-
-  // При клике на главный указатель. Активация указателя и скрытие карточек объявления
-  if (targetParent.classList.contains('map__pin--main')) {
-    currentPin = targetParent;
-    currentPin.classList.add('map__pin--active');
-    // Скрытие карточек объявления
-    toggleNoticeCardVisibility(noticeCards, false);
   }
 };
 
@@ -359,22 +348,7 @@ var deactivateMapPin = function () {
 
   if (activePin) {
     activePin.classList.remove('map__pin--active');
-    // Отключение видимости карточек объявления
-    toggleNoticeCardVisibility(noticeCardsPopups, false);
   }
-};
-
-/**
- * Переключение видимости элементов массива карточек объявлений
- * @param {Array} cards - массив карточек с подробностями объявлений
- * @param {boolean} flag - true для включения видимости элемента
- */
-var toggleNoticeCardVisibility = function (cards, flag) {
-  cards = cards.length ? cards : [cards];
-
-  cards.forEach(function (card) {
-    card.classList.toggle('hidden', !flag);
-  });
 };
 
 /**
@@ -399,4 +373,3 @@ var removeEventListener = function (element, eventType, handler) {
 
 toggleNoticeFormActivityStatus(false);
 addEventListener(mapPinMain, 'mouseup', onMapPinMainMouseup);
-addEventListener(mapPinsBlock, 'click', onMapPinClick);
