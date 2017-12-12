@@ -265,6 +265,8 @@ var activateNoticeForm = function () {
   noticeFormFieldsets.forEach(function (fieldset) {
     fieldset.disabled = false;
   });
+  // Очистка поля ввода заголовка формы, т. к. Edge игнорирует autocomplete='off'
+  clearInputField(noticeFormTitleField);
 };
 
 // Получение главного указателя карты
@@ -411,4 +413,27 @@ var removeEventListener = function (element, eventType, handler) {
   element.removeEventListener(eventType, handler);
 };
 
+// Получение поля ввода заголовка в форме объявления
+var noticeFormTitleField = noticeForm.querySelector('#title');
+
+/**
+ * Очистка поля ввода
+ * @param {Element} field
+ */
+var clearInputField = function (field) {
+  field.value = '';
+};
+
+// Обработчик события ввода в поле заголовка объявления
+var onNoticeFormTitleFieldInput = function () {
+  var titleMinLength = noticeFormTitleField.getAttribute('minlength');
+
+  if (noticeFormTitleField.value.length < titleMinLength || noticeFormTitleField.validity.tooShort) {
+    noticeFormTitleField.setCustomValidity('Заголовок не может быть короче ' + titleMinLength + ' символов. Сейчас ' + noticeFormTitleField.value.length + '.');
+  } else {
+    noticeFormTitleField.setCustomValidity('');
+  }
+};
+
 addEventListener(mapPinMain, 'mouseup', onMapPinMainMouseUp);
+addEventListener(noticeForm, 'input', onNoticeFormTitleFieldInput);

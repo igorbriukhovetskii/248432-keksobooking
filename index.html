@@ -85,7 +85,7 @@
   <div class="notice">
     <h2 class="notice__title">Ваше объявление</h2>
 
-    <form class="notice__form notice__form--disabled" method="post" enctype="multipart/form-data" autocomplete="off">
+    <form class="notice__form notice__form--disabled" action="https://js.dump.academy/keksobooking" method="post" enctype="multipart/form-data" autocomplete="off">
       <fieldset class="notice__header" disabled>
         <legend>Ваша фотография (для карты)</legend>
         <div class="notice__photo">
@@ -102,7 +102,7 @@
 
       <fieldset class="form__element form__element--wide" disabled>
         <label for="title">Заголовок объявления</label>
-        <input id="title" name="title" type="text" placeholder="Милая, уютная квартирка в центре Токио">
+        <input id="title" name="title" type="text" minlength="30" maxlength="100" placeholder="Милая, уютная квартирка в центре Токио" required>
       </fieldset>
 
       <fieldset class="form__element form__element--wide" disabled>
