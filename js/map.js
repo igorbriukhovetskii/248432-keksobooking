@@ -271,7 +271,8 @@ var activateNoticeForm = function () {
   syncRoomsAndGuestsValue();
   // Первичная синхронизация типа жилья и минимальной цены
   syncHousingTypeAndMinPrice();
-  addEventListener(noticeForm, 'change', onNoticeFormChange);
+  addEventListener(submitFormButon, 'click', onSubmitFormButtonClick);
+  addEventListener(noticeFormTitleField, 'input', onTitleFieldInput);
 };
 
 // Получение главного указателя карты
@@ -429,17 +430,26 @@ var clearInputField = function (field) {
   field.value = '';
 };
 
-// Валидация поля ввода заголовка объявления
-var validateTitleField = function (event) {
-  if (event.type === 'input') {
-    var titleMinLength = noticeFormTitleField.getAttribute('minlength');
+// Включение/отключение обводки для поля ввода в зависимости от статуса валидации
+var toggleFieldOutline = function (field) {
+  field.style.outline = field.checkValidity() ? 'none' : '2px solid red';
+};
 
-    if (noticeFormTitleField.value.length < titleMinLength || noticeFormTitleField.validity.tooShort) {
-      noticeFormTitleField.setCustomValidity('Заголовок не может быть короче ' + titleMinLength + ' символов. Сейчас ' + noticeFormTitleField.value.length + '.');
-    } else {
-      noticeFormTitleField.setCustomValidity('');
-    }
+// Валидация поля ввода заголовка объявления
+var validateTitleField = function () {
+  var titleMinLength = noticeFormTitleField.getAttribute('minlength');
+
+  if (noticeFormTitleField.value.length < titleMinLength || noticeFormTitleField.validity.tooShort) {
+    noticeFormTitleField.setCustomValidity('Заголовок не может быть короче ' + titleMinLength + ' символов. Сейчас ' + noticeFormTitleField.value.length + '.');
+  } else {
+    noticeFormTitleField.setCustomValidity('');
   }
+  toggleFieldOutline(noticeFormTitleField);
+};
+
+// Обработчик события 'input' на поле ввода заголовка
+var onTitleFieldInput = function () {
+  validateTitleField();
 };
 
 // Получение поля выбора времени заезда
@@ -507,17 +517,21 @@ var syncHousingTypeAndMinPrice = function () {
     case 'palace':
       housingPriceField.min = 10000;
   }
+  toggleFieldOutline(housingPriceField);
 };
 
+// Получение кнопки отправки формы
+var submitFormButon = noticeForm.querySelector('.form__submit');
+
 /**
- * Обработка события 'change' формы
+ * Обработка события 'click' на кнопке отправки формы
  * @param {Object} event
  */
-var onNoticeFormChange = function (event) {
+var onSubmitFormButtonClick = function (event) {
   syncRoomsAndGuestsValue();
   syncHousingTypeAndMinPrice();
-  validateTitleField(event);
   syncFieldsValue(event, checkInTimeSelect, checkOutTimeSelect);
+  validateTitleField();
 };
 
 addEventListener(mapPinMain, 'mouseup', onMapPinMainMouseUp);
