@@ -271,7 +271,7 @@ var activateNoticeForm = function () {
   syncRoomsAndGuestsValue();
   // Первичная синхронизация типа жилья и минимальной цены
   syncHousingTypeAndMinPrice();
-  addEventListener(submitFormButon, 'click', onSubmitFormButtonClick);
+  addEventListener(noticeForm, 'change', onSubmitFormButtonClick);
   addEventListener(noticeFormTitleField, 'input', onTitleFieldInput);
 };
 
@@ -539,11 +539,8 @@ var setAddressCoordinates = function () {
   addressField.value = pinXcoordinate + ', ' + pinYcoordinate;
 };
 
-// Получение кнопки отправки формы
-var submitFormButon = noticeForm.querySelector('.form__submit');
-
 /**
- * Обработка события 'click' на кнопке отправки формы
+ * Обработка события 'change' формы
  * @param {Object} event
  */
 var onSubmitFormButtonClick = function (event) {
