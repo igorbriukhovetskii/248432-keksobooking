@@ -267,6 +267,8 @@ var activateNoticeForm = function () {
   });
   // Очистка поля ввода заголовка формы, т. к. Edge игнорирует autocomplete='off'
   clearInputField(noticeFormTitleField);
+  // Первичная синхронизация селектов количества комнат и гостей
+  syncRoomsAndGuestsValue();
 };
 
 // Получение главного указателя карты
@@ -435,5 +437,62 @@ var onNoticeFormTitleFieldInput = function () {
   }
 };
 
+// Получение поля выбора времени заезда
+var checkInTimeSelect = noticeForm.querySelector('#timein');
+// Получение поля выбора времени выезда
+var checkOutTimeSelect = noticeForm.querySelector('#timeout');
+
+/**
+ * Обработчик события изменения значения селекта времени заезда/выезда
+ * @param {Object} event
+ */
+var onTimeSelectChange = function (event) {
+  syncFieldsValue(event, checkInTimeSelect, checkOutTimeSelect);
+};
+
+/**
+ * Синхронизация значений полей формы
+ * @param {Object} event
+ * @param {Element} firstField
+ * @param {Element} secondField
+ */
+var syncFieldsValue = function (event, firstField, secondField) {
+  var target = event.target;
+
+  if (target === firstField) {
+    secondField.value = firstField.value;
+  } else if (target === secondField) {
+    firstField.value = secondField.value;
+  }
+};
+
+// Получение селекта выбора количества комнат
+var roomsValueSelect = noticeForm.querySelector('#room_number');
+// Получение селекта выбора количества гостей
+var capacitySelect = noticeForm.querySelector('#capacity');
+
+// Синхронизация количества комнат с возможным количеством гостей
+var syncRoomsAndGuestsValue = function () {
+  var roomsValue = roomsValueSelect.value;
+  capacitySelect.value = roomsValue !== '100' ? roomsValue : '0';
+
+  Array.prototype.forEach.call(capacitySelect.options, function (option) {
+    option.disabled = (+roomsValue < +option.value || option.value === '0');
+  });
+
+  if (roomsValue === '100') {
+    Array.prototype.forEach.call(capacitySelect.options, function (option) {
+      option.disabled = option.value !== '0';
+    });
+  }
+};
+
+// Обработчик изменения значения селекта количества комнат
+var onRoomsValueSelectChange = function () {
+  syncRoomsAndGuestsValue();
+};
+
 addEventListener(mapPinMain, 'mouseup', onMapPinMainMouseUp);
+addEventListener(noticeForm, 'change', onTimeSelectChange);
+addEventListener(roomsValueSelect, 'change', onRoomsValueSelectChange);
 addEventListener(noticeForm, 'input', onNoticeFormTitleFieldInput);
