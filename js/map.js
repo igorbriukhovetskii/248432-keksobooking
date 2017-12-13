@@ -269,6 +269,9 @@ var activateNoticeForm = function () {
   clearInputField(noticeFormTitleField);
   // Первичная синхронизация селектов количества комнат и гостей
   syncRoomsAndGuestsValue();
+  // Первичная синхронизация типа жилья и минимальной цены
+  syncHousingTypeAndMinPrice();
+  addEventListener(noticeForm, 'change', onNoticeFormChange);
 };
 
 // Получение главного указателя карты
@@ -426,14 +429,16 @@ var clearInputField = function (field) {
   field.value = '';
 };
 
-// Обработчик события ввода в поле заголовка объявления
-var onNoticeFormTitleFieldInput = function () {
-  var titleMinLength = noticeFormTitleField.getAttribute('minlength');
+// Валидация поля ввода заголовка объявления
+var validateTitleField = function (event) {
+  if (event.type === 'input') {
+    var titleMinLength = noticeFormTitleField.getAttribute('minlength');
 
-  if (noticeFormTitleField.value.length < titleMinLength || noticeFormTitleField.validity.tooShort) {
-    noticeFormTitleField.setCustomValidity('Заголовок не может быть короче ' + titleMinLength + ' символов. Сейчас ' + noticeFormTitleField.value.length + '.');
-  } else {
-    noticeFormTitleField.setCustomValidity('');
+    if (noticeFormTitleField.value.length < titleMinLength || noticeFormTitleField.validity.tooShort) {
+      noticeFormTitleField.setCustomValidity('Заголовок не может быть короче ' + titleMinLength + ' символов. Сейчас ' + noticeFormTitleField.value.length + '.');
+    } else {
+      noticeFormTitleField.setCustomValidity('');
+    }
   }
 };
 
@@ -441,14 +446,6 @@ var onNoticeFormTitleFieldInput = function () {
 var checkInTimeSelect = noticeForm.querySelector('#timein');
 // Получение поля выбора времени выезда
 var checkOutTimeSelect = noticeForm.querySelector('#timeout');
-
-/**
- * Обработчик события изменения значения селекта времени заезда/выезда
- * @param {Object} event
- */
-var onTimeSelectChange = function (event) {
-  syncFieldsValue(event, checkInTimeSelect, checkOutTimeSelect);
-};
 
 /**
  * Синхронизация значений полей формы
@@ -474,25 +471,53 @@ var capacitySelect = noticeForm.querySelector('#capacity');
 // Синхронизация количества комнат с возможным количеством гостей
 var syncRoomsAndGuestsValue = function () {
   var roomsValue = roomsValueSelect.value;
+  // Изменение значения селекта количиства гостей в зависимости от выбранного кол-ва комнат
   capacitySelect.value = roomsValue !== '100' ? roomsValue : '0';
 
-  Array.prototype.forEach.call(capacitySelect.options, function (option) {
-    option.disabled = (+roomsValue < +option.value || option.value === '0');
-  });
-
+  // Если выбран пункт '100 комнат', деактивируются все опции, кроме 'не для гостей'
   if (roomsValue === '100') {
     Array.prototype.forEach.call(capacitySelect.options, function (option) {
       option.disabled = option.value !== '0';
     });
+  } else {
+    // Деактивация опций в селекте если комнат меньше чем гостей. Отключение пункта 'не для гостей'
+    Array.prototype.forEach.call(capacitySelect.options, function (option) {
+      option.disabled = (+roomsValue < +option.value || option.value === '0');
+    });
   }
 };
 
-// Обработчик изменения значения селекта количества комнат
-var onRoomsValueSelectChange = function () {
+// Получение селекта выбора типа жилья
+var housingTypeSelect = noticeForm.querySelector('#type');
+// Получение поля ввода цены жилья
+var housingPriceField = noticeForm.querySelector('#price');
+
+// Синхронизация выбранного типа жилья и минимальной цены
+var syncHousingTypeAndMinPrice = function () {
+  switch (housingTypeSelect.value) {
+    case 'bungalo':
+      housingPriceField.min = 0;
+      break;
+    case 'flat':
+      housingPriceField.min = 1000;
+      break;
+    case 'house':
+      housingPriceField.min = 5000;
+      break;
+    case 'palace':
+      housingPriceField.min = 10000;
+  }
+};
+
+/**
+ * Обработка события 'change' формы
+ * @param {Object} event
+ */
+var onNoticeFormChange = function (event) {
   syncRoomsAndGuestsValue();
+  syncHousingTypeAndMinPrice();
+  validateTitleField(event);
+  syncFieldsValue(event, checkInTimeSelect, checkOutTimeSelect);
 };
 
 addEventListener(mapPinMain, 'mouseup', onMapPinMainMouseUp);
-addEventListener(noticeForm, 'change', onTimeSelectChange);
-addEventListener(roomsValueSelect, 'change', onRoomsValueSelectChange);
-addEventListener(noticeForm, 'input', onNoticeFormTitleFieldInput);
