@@ -520,6 +520,25 @@ var syncHousingTypeAndMinPrice = function () {
   toggleFieldOutline(housingPriceField);
 };
 
+// Получение поля для адреса
+var addressField = noticeForm.querySelector('#address');
+
+// Установка координат адреса по положению главного пина
+var setAddressCoordinates = function () {
+  // Получение объекта с вычисленными стилями главного пина
+  var pin = getComputedStyle(mapPinMain);
+  // Вычисление поправки по координате Х относительно центральной оси пина
+  var pinXoffset = parseInt(pin.getPropertyValue('width'), 10) / 2;
+  // Вычисление поправки по координате Y относительно острия иглы пина
+  var pinYoffset = parseInt(pin.getPropertyValue('height'), 10);
+  // Вычисление X координаты острия иглы пина
+  var pinXcoordinate = parseInt(pin.getPropertyValue('left'), 10) - pinXoffset;
+  // Вычисление Y координаты острия иглы пина
+  var pinYcoordinate = parseInt(pin.getPropertyValue('top'), 10) - pinYoffset;
+  // Изменение значения поля адреса
+  addressField.value = pinXcoordinate + ', ' + pinYcoordinate;
+};
+
 // Получение кнопки отправки формы
 var submitFormButon = noticeForm.querySelector('.form__submit');
 
@@ -532,6 +551,7 @@ var onSubmitFormButtonClick = function (event) {
   syncHousingTypeAndMinPrice();
   syncFieldsValue(event, checkInTimeSelect, checkOutTimeSelect);
   validateTitleField();
+  setAddressCoordinates();
 };
 
 addEventListener(mapPinMain, 'mouseup', onMapPinMainMouseUp);
