@@ -33,91 +33,37 @@ var PIN_Y_COORDINATE_MAX = 500;
 var PIN_NEEDLE_HEIGHT = 18;
 var ESC_KEYCODE = 27;
 
-/**
- * Получение случайного целого числа в заданном диапазоне
- * @param {number} maxValue - максимальное возможное число
- * @param {number} minValue - минимальное возможное число, по умолчанию равно 0
- * @return {number} - случайное целое число
- */
-var getRandomInteger = function (maxValue, minValue) {
-  minValue = minValue || 0;
-  return Math.floor(Math.random() * (maxValue + 1 - minValue) + minValue);
-};
-
-/**
- * Получение случайного элемента массива
- * @param {Array} array
- * @return {*} - случайный элемент массива
- */
-var getRandomArrayElement = function (array) {
-  return array[getRandomInteger(array.length - 1, 0)];
-};
-
-/**
- * Перетасовка массива
- * @param {Array} array
- * @return {Array} shuffledArray - возвращает перетасованную копию оригинального массива
- */
-var getShuffledArray = function (array) {
-  var shuffledArray = array.slice();
-  for (var i = shuffledArray.length - 1; i >= 0; i--) {
-    var j = Math.floor(Math.random() * i + 1);
-    var swap = shuffledArray[i];
-    shuffledArray[i] = shuffledArray[j];
-    shuffledArray[j] = swap;
-  }
-  return shuffledArray;
-};
-
-/**
- * Извлекает последний элемент массива, уменьшает исходный массив
- * @param {Array} array
- * @return {*}
- */
-var extractLastArrayElement = function (array) {
-  return array.splice(array.length - 1, 1);
-};
-
-/**
- * Укорачивает исходный массив на произвольное количество элементов
- * @param {Array} array
- * @return {Array} - укороченный массив
- */
-var getRandomLengthArray = function (array) {
-  return array.slice(getRandomInteger(array.length - 1, 1));
-};
-
 // Генерирование массива случайных объявлений
 var generatePosts = function () {
   var posts = [];
-  var avatarNumbers = getShuffledArray(AVATAR_NUMBERS);
-  var offerTitles = getShuffledArray(OFFER_TITLES);
+  var avatarNumbers = window.util.getShuffledArray(AVATAR_NUMBERS);
+  var offerTitles = window.util.getShuffledArray(OFFER_TITLES);
 
   // Генерация объявления
   var getPost = function () {
-    var pinXcoordinate = getRandomInteger(PIN_X_COORDINATE_MAX, PIN_X_COORDINATE_MIN);
-    var pinYcoordinate = getRandomInteger(PIN_Y_COORDINATE_MAX, PIN_Y_COORDINATE_MIN);
+    var pinXcoordinate = window.util.getRandomInteger(PIN_X_COORDINATE_MAX, PIN_X_COORDINATE_MIN);
+    var pinYcoordinate = window.util.getRandomInteger(PIN_Y_COORDINATE_MAX, PIN_Y_COORDINATE_MIN);
 
     return {
       author: {
-        avatar: 'img/avatars/user' + extractLastArrayElement(avatarNumbers) + '.png'
+        avatar: 'img/avatars/user' + window.util.extractLastArrayElement(avatarNumbers) + '.png'
       },
       offer: {
-        title: extractLastArrayElement(offerTitles),
+        title: window.util.extractLastArrayElement(offerTitles),
         address: '\'' + pinXcoordinate + ', ' + pinYcoordinate + '\'',
-        price: getRandomInteger(OFFER_MAX_PRICE, OFFER_MIN_PRICE),
-        type: getRandomArrayElement(OFFER_TYPES),
-        rooms: getRandomInteger(OFFER_MAX_ROOM_NUMBER, OFFER_MIN_ROOM_NUMBER),
-        guests: getRandomInteger(GUESTS_MAX_NUMBER, GUESTS_MIN_NUMBER),
-        checkin: getRandomArrayElement(CHECKIN_TIMES),
-        checkout: getRandomArrayElement(CHECKOUT_TIMES),
-        features: getRandomLengthArray(getShuffledArray(OFFER_FEATURES)),
+        price: window.util.getRandomInteger(OFFER_MAX_PRICE, OFFER_MIN_PRICE),
+        type: window.util.getRandomArrayElement(OFFER_TYPES),
+        rooms: window.util.getRandomInteger(OFFER_MAX_ROOM_NUMBER, OFFER_MIN_ROOM_NUMBER),
+        guests: window.util.getRandomInteger(GUESTS_MAX_NUMBER, GUESTS_MIN_NUMBER),
+        checkin: window.util.getRandomArrayElement(CHECKIN_TIMES),
+        checkout: window.util.getRandomArrayElement(CHECKOUT_TIMES),
+        features: window.util.getRandomLengthArray(window.util.getShuffledArray(OFFER_FEATURES)),
         description: '',
         photos: []
       },
       location: {
-        x: getRandomInteger(PIN_X_COORDINATE_MAX, PIN_X_COORDINATE_MIN),
-        y: getRandomInteger(PIN_Y_COORDINATE_MAX, PIN_Y_COORDINATE_MIN)
+        x: window.util.getRandomInteger(PIN_X_COORDINATE_MAX, PIN_X_COORDINATE_MIN),
+        y: window.util.getRandomInteger(PIN_Y_COORDINATE_MAX, PIN_Y_COORDINATE_MIN)
       }
     };
   };
