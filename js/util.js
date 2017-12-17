@@ -56,6 +56,23 @@
   };
 
   /**
+   * Подготовка элементов по шаблону и вставка их в DOM
+   * @param {Array|Object} data - исходные данные для подготовки DOM элемента
+   * @param {Function} renderMethod - функция подготавливающая к вставке отдельные элементы по шаблону
+   * @return {DocumentFragment} - готовый к вставке в DOM фрагмент
+   */
+  var getDocumentFragment = function (data, renderMethod) {
+    data = data.length ? data : [data];
+    var fragment = document.createDocumentFragment();
+
+    data.forEach(function (dataItem, index) {
+      fragment.appendChild(renderMethod(dataItem, index));
+    });
+
+    return fragment;
+  };
+
+  /**
    * Добавление обработчика события
    * @param {Element} element - элемент на который вешается обработчик
    * @param {string} eventType - обрабатываемое событие
@@ -81,6 +98,7 @@
     getShuffledArray: getShuffledArray,
     extractLastArrayElement: extractLastArrayElement,
     getRandomLengthArray: getRandomLengthArray,
+    getDocumentFragment: getDocumentFragment,
     addEventListener: addEventListener,
     removeEventListener: removeEventListener
   };
