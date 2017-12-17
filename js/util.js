@@ -55,11 +55,33 @@
     return array.slice(getRandomInteger(array.length - 1, 1));
   };
 
+  /**
+   * Добавление обработчика события
+   * @param {Element} element - элемент на который вешается обработчик
+   * @param {string} eventType - обрабатываемое событие
+   * @param {Function} handler - обработчик
+   */
+  var addEventListener = function (element, eventType, handler) {
+    element.addEventListener(eventType, handler);
+  };
+
+  /**
+   * Удаление обработчика события
+   * @param {Element} element - элемент с которого снимается обработчик
+   * @param {string} eventType - обрабатываемое событие
+   * @param {Function} handler - обработчик
+   */
+  var removeEventListener = function (element, eventType, handler) {
+    element.removeEventListener(eventType, handler);
+  };
+
   window.util = {
     getRandomInteger: getRandomInteger,
     getRandomArrayElement: getRandomArrayElement,
     getShuffledArray: getShuffledArray,
     extractLastArrayElement: extractLastArrayElement,
-    getRandomLengthArray: getRandomLengthArray
+    getRandomLengthArray: getRandomLengthArray,
+    addEventListener: addEventListener,
+    removeEventListener: removeEventListener
   };
 }());
