@@ -1,30 +1,6 @@
 'use strict';
 
-var PIN_NEEDLE_HEIGHT = 18;
 var ESC_KEYCODE = 27;
-
-var template = document.querySelector('template');
-var pinTemplate = template.content.querySelector('.map__pin');
-
-/**
- * Подготовка нового указателя на карте по шаблону
- * @param {Object} post - элемент сгенерированного массива случайных объявлений
- * @param {number} index - индекс указателя, соответствует индексу объявления в массиве случайных объявлений
- * @return {Node} - подготовленный к вставке указатель (пин) на карте
- */
-var renderMapPin = function (post, index) {
-  var mapPin = pinTemplate.cloneNode(true);
-  var mapPinImage = mapPin.querySelector('img');
-  var pinOffsetX = mapPinImage.getAttribute('width') / 2;
-  var pinOffsetY = parseInt(mapPinImage.getAttribute('height'), 10) + PIN_NEEDLE_HEIGHT;
-
-  mapPin.style.left = post.location.x - pinOffsetX + 'px';
-  mapPin.style.top = post.location.y - pinOffsetY + 'px';
-  mapPinImage.src = post.author.avatar;
-  mapPin.dataset.index = index;
-
-  return mapPin;
-};
 
 // Получение карты
 var map = document.querySelector('.map');
@@ -41,7 +17,7 @@ var mapPinsBlock = map.querySelector('.map__pins');
 // Получение контейнера блока фильтров
 var mapFilters = map.querySelector('.map__filters-container');
 // Генерирование массива случайных объявлений
-var posts = window.data.getPosts();
+var posts = window.data.posts;
 
 // Обработчик события mouseup на главном указателе карты
 var onMapPinMainMouseUp = function () {
@@ -50,7 +26,7 @@ var onMapPinMainMouseUp = function () {
   // Активация полей формы
   window.form.activateNoticeForm();
   // Формирование фрагмента с указателями на карте
-  var mapPinsFragment = window.util.getDocumentFragment(posts, renderMapPin);
+  var mapPinsFragment = window.util.getDocumentFragment(posts, window.pin.renderMapPin);
   // Добавление фрагмента с указателями на страницу
   mapPinsBlock.appendChild(mapPinsFragment);
   window.util.addEventListener(mapPinsBlock, 'click', onMapPinClick);

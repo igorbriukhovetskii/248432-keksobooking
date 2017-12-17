@@ -27,9 +27,10 @@
   var PIN_Y_COORDINATE_MIN = 100;
   var PIN_Y_COORDINATE_MAX = 500;
 
+  var posts = [];
+
   // Генерирование массива случайных объявлений
   var getPosts = function () {
-    var posts = [];
     var avatarNumbers = window.util.getShuffledArray(AVATAR_NUMBERS);
     var offerTitles = window.util.getShuffledArray(OFFER_TITLES);
 
@@ -65,11 +66,11 @@
     for (var i = 0; i < AVATAR_NUMBERS.length; i++) {
       posts.push(generatePost());
     }
-
-    return posts;
   };
 
+  getPosts();
+
   window.data = {
-    getPosts: getPosts
+    posts: posts
   };
 }());
