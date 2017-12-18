@@ -25,36 +25,10 @@ var onMapPinMainMouseUp = function () {
   removeMapFading();
   // Активация полей формы
   window.form.activateNoticeForm();
-  // Формирование фрагмента с указателями на карте
-  var mapPinsFragment = window.util.getDocumentFragment(posts, window.pin.renderMapPin);
-  // Добавление фрагмента с указателями на страницу
-  mapPinsBlock.appendChild(mapPinsFragment);
+  // Добавление пинов на карту
+  window.pin.addMapPins();
   window.util.addEventListener(mapPinsBlock, 'click', onMapPinClick);
   window.util.removeEventListener(mapPinMain, 'mouseup', onMapPinMainMouseUp);
-};
-
-// Создание карточки объявления, добавление её в DOM
-var addNoticeCard = function () {
-  var activePin = mapPinsBlock.querySelector('.map__pin--active');
-
-  if (activePin && !activePin.classList.contains('map__pin--main')) {
-    var index = activePin.dataset.index;
-    // Формирование фрагмента с карточкой объявления
-    var card = window.util.getDocumentFragment(posts[index], window.card.renderNoticeCard);
-    // Добавление фрагмента с карточкой на страницу
-    map.insertBefore(card, mapFilters);
-    enablePopupClose();
-  }
-};
-
-// Удаление карточки объявления
-var removeNoticeCard = function () {
-  var card = map.querySelector('.popup');
-
-  if (card) {
-    disablePopupClose();
-    map.removeChild(card);
-  }
 };
 
 /**
@@ -63,9 +37,9 @@ var removeNoticeCard = function () {
  */
 var onMapPinClick = function (event) {
   deactivateMapPin(event);
-  removeNoticeCard();
+  window.card.removeNoticeCard();
   activateMapPin(event);
-  addNoticeCard();
+  window.card.addNoticeCard();
 };
 
 /**

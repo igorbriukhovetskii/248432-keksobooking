@@ -26,7 +26,19 @@
     return mapPin;
   };
 
+  // Получение карты
+  var map = document.querySelector('.map');
+  // Получение блока с указателями (пинами) карты
+  var mapPinsBlock = map.querySelector('.map__pins');
+
+  var addMapPins = function () {
+    // Формирование фрагмента с указателями на карте
+    var mapPinsFragment = window.util.getDocumentFragment(window.data.posts, renderMapPin);
+    // Добавление фрагмента с указателями на страницу
+    mapPinsBlock.appendChild(mapPinsFragment);
+  };
+
   window.pin = {
-    renderMapPin: renderMapPin
+    addMapPins: addMapPins
   };
 })();

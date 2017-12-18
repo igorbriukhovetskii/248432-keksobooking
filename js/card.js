@@ -85,7 +85,40 @@
     return card;
   };
 
+  // Получение карты
+  var map = document.querySelector('.map');
+  // Получение блока с указателями (пинами) карты
+  var mapPinsBlock = map.querySelector('.map__pins');
+  // Получение контейнера блока фильтров
+  var mapFilters = map.querySelector('.map__filters-container');
+
+
+  // Создание карточки объявления, добавление её в DOM
+  var addNoticeCard = function () {
+    var activePin = mapPinsBlock.querySelector('.map__pin--active');
+
+    if (activePin && !activePin.classList.contains('map__pin--main')) {
+      var index = activePin.dataset.index;
+      // Формирование фрагмента с карточкой объявления
+      var card = window.util.getDocumentFragment(window.data.posts[index], renderNoticeCard);
+      // Добавление фрагмента с карточкой на страницу
+      map.insertBefore(card, mapFilters);
+      //enablePopupClose();
+    }
+  };
+
+  // Удаление карточки объявления
+  var removeNoticeCard = function () {
+    var card = map.querySelector('.popup');
+
+    if (card) {
+      //disablePopupClose();
+      map.removeChild(card);
+    }
+  };
+
   window.card = {
-    renderNoticeCard: renderNoticeCard
+    addNoticeCard: addNoticeCard,
+    removeNoticeCard: removeNoticeCard
   };
 }());
