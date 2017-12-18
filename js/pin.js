@@ -32,13 +32,6 @@
   // Получение блока с указателями (пинами) карты
   var mapPinsBlock = map.querySelector('.map__pins');
 
-  var addMapPins = function () {
-    // Формирование фрагмента с указателями на карте
-    var mapPinsFragment = window.util.getDocumentFragment(window.data.posts, renderMapPin);
-    // Добавление фрагмента с указателями на страницу
-    mapPinsBlock.appendChild(mapPinsFragment);
-  };
-
   /**
    * Активация указателя на карте
    * @param {Object} event
@@ -66,6 +59,28 @@
       activePin.classList.remove('map__pin--active');
     }
   };
+
+  /**
+   * Обработчик события click на указателе карты
+   * @param {Object} event
+   */
+  var onMapPinClick = function (event) {
+    window.pin.deactivateMapPin(event);
+    window.card.removeNoticeCard();
+    window.pin.activateMapPin(event);
+    window.card.addNoticeCard();
+  };
+
+  // Добавление указателей на карту
+  var addMapPins = function () {
+    // Формирование фрагмента с указателями на карте
+    var mapPinsFragment = window.util.getDocumentFragment(window.data.posts, renderMapPin);
+    // Добавление фрагмента с указателями на страницу
+    mapPinsBlock.appendChild(mapPinsFragment);
+    // Добавление обработчика клика на пине
+    window.util.addEventListener(mapPinsBlock, 'click', onMapPinClick);
+  };
+
 
   window.pin = {
     addMapPins: addMapPins,

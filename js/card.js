@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var ESC_KEYCODE = 27;
   var OFFER_TYPES_VOCABULARY = {
     flat: 'Квартира',
     house: 'Дом',
@@ -92,7 +93,6 @@
   // Получение контейнера блока фильтров
   var mapFilters = map.querySelector('.map__filters-container');
 
-
   // Создание карточки объявления, добавление её в DOM
   var addNoticeCard = function () {
     var activePin = mapPinsBlock.querySelector('.map__pin--active');
@@ -103,7 +103,7 @@
       var card = window.util.getDocumentFragment(window.data.posts[index], renderNoticeCard);
       // Добавление фрагмента с карточкой на страницу
       map.insertBefore(card, mapFilters);
-      //enablePopupClose();
+      enablePopupClose();
     }
   };
 
@@ -112,9 +112,47 @@
     var card = map.querySelector('.popup');
 
     if (card) {
-      //disablePopupClose();
+      disablePopupClose();
       map.removeChild(card);
     }
+  };
+
+  /**
+   * Обаботчик клика по кнопке закрытия окна карточки объявления
+   * @param {Object} event
+   */
+  var onPopupCloseClick = function (event) {
+    removeNoticeCard();
+    window.pin.deactivateMapPin(event);
+  };
+
+  /**
+   * Обработчик нажатия клавиши escape
+   * @param {Object} event
+   */
+  var onEscapeButtonKeydown = function (event) {
+    if (event.keyCode === ESC_KEYCODE) {
+      window.card.removeNoticeCard();
+      window.pin.deactivateMapPin(event);
+    }
+  };
+
+  // Подключение процедуры закрытия окна карточки объявления
+  var enablePopupClose = function () {
+    var popup = map.querySelector('.popup');
+    var popupCloseButton = popup.querySelector('.popup__close');
+
+    window.util.addEventListener(popupCloseButton, 'click', onPopupCloseClick);
+    window.util.addEventListener(document, 'keydown', onEscapeButtonKeydown);
+  };
+
+  // Удаление обработчиков событий и отключение механизма закрытия окна карточки объявления
+  var disablePopupClose = function () {
+    var popup = map.querySelector('.popup');
+    var popupCloseButton = popup.querySelector('.popup__close');
+
+    window.util.removeEventListener(popupCloseButton, 'click', onPopupCloseClick);
+    window.util.removeEventListener(document, 'keydown', onEscapeButtonKeydown);
   };
 
   window.card = {
