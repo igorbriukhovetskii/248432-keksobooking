@@ -2,6 +2,7 @@
 
 (function () {
   var PIN_NEEDLE_HEIGHT = 18;
+  var ESC_KEYCODE = 27;
 
   var template = document.querySelector('template');
   var pinTemplate = template.content.querySelector('.map__pin');
@@ -38,7 +39,37 @@
     mapPinsBlock.appendChild(mapPinsFragment);
   };
 
+  /**
+   * Активация указателя на карте
+   * @param {Object} event
+   */
+  var activateMapPin = function (event) {
+    var target = event.target;
+    var currentPin = target.closest('.map__pin');
+
+    if (currentPin) {
+      currentPin.classList.add('map__pin--active');
+    }
+  };
+
+  // Деактивация указателя на карте
+  var deactivateMapPin = function (event) {
+    var target = event.target;
+    // Проверка наличия активного указателя
+    var activePin = mapPinsBlock.querySelector('.map__pin--active');
+    // Условие декативации указателя: событие произошло на указателе или на кнопке закрытия карточки объявления
+    var eventTargetCondition = (target.closest('.map__pin') || target.classList.contains('popup__close'));
+    // Условие деактивации указателя: нажата клавиша ESC
+    var eventKeycodeCondition = (event.keyCode === ESC_KEYCODE);
+
+    if (activePin && eventTargetCondition || eventKeycodeCondition) {
+      activePin.classList.remove('map__pin--active');
+    }
+  };
+
   window.pin = {
-    addMapPins: addMapPins
+    addMapPins: addMapPins,
+    activateMapPin: activateMapPin,
+    deactivateMapPin: deactivateMapPin
   };
 })();

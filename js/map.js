@@ -36,38 +36,10 @@ var onMapPinMainMouseUp = function () {
  * @param {Object} event
  */
 var onMapPinClick = function (event) {
-  deactivateMapPin(event);
+  window.pin.deactivateMapPin(event);
   window.card.removeNoticeCard();
-  activateMapPin(event);
+  window.pin.activateMapPin(event);
   window.card.addNoticeCard();
-};
-
-/**
- * Активация указателя на карте
- * @param {Object} event
- */
-var activateMapPin = function (event) {
-  var target = event.target;
-  var currentPin = target.closest('.map__pin');
-
-  if (currentPin) {
-    currentPin.classList.add('map__pin--active');
-  }
-};
-
-// Деактивация указателя на карте
-var deactivateMapPin = function (event) {
-  var target = event.target;
-  // Проверка наличия активного указателя
-  var activePin = mapPinsBlock.querySelector('.map__pin--active');
-  // Условие декативации указателя: событие произошло на указателе или на кнопке закрытия карточки объявления
-  var eventTargetCondition = (target.closest('.map__pin') || target.classList.contains('popup__close'));
-  // Условие деактивации указателя: нажата клавиша ESC
-  var eventKeycodeCondition = (event.keyCode === ESC_KEYCODE);
-
-  if (activePin && eventTargetCondition || eventKeycodeCondition) {
-    activePin.classList.remove('map__pin--active');
-  }
 };
 
 /**
