@@ -113,6 +113,7 @@
 
     map.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
+    mapPinMain.removeEventListener('mousedown', onMapPinMainMouseDown);
   };
 
   mapPinMain.addEventListener('mousedown', onMapPinMainMouseDown);
