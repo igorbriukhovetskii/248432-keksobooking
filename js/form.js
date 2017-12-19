@@ -108,35 +108,22 @@
 
   // Получение поля для адреса
   var addressField = noticeForm.querySelector('#address');
-  // Получение главного пина карты
-  var mapPinMain = document.querySelector('.map__pin--main');
 
-  // Установка координат адреса по положению главного пина
-  var setAddressCoordinates = function () {
-    // Получение объекта с вычисленными стилями главного пина
-    var pin = getComputedStyle(mapPinMain);
-    // Вычисление поправки по координате Х относительно центральной оси пина
-    var pinXoffset = parseInt(pin.getPropertyValue('width'), 10) / 2;
-    // Вычисление поправки по координате Y относительно острия иглы пина
-    var pinYoffset = parseInt(pin.getPropertyValue('height'), 10);
-    // Вычисление X координаты острия иглы пина
-    var pinXcoordinate = parseInt(pin.getPropertyValue('left'), 10) - pinXoffset;
-    // Вычисление Y координаты острия иглы пина
-    var pinYcoordinate = parseInt(pin.getPropertyValue('top'), 10) - pinYoffset;
+  // Заполнение поля для адреса значениями координат
+  var setAddressCoordinates = function (coordinates) {
     // Изменение значения поля адреса
-    addressField.value = pinXcoordinate + ', ' + pinYcoordinate;
+    addressField.value = 'x: ' + coordinates.x + ' ,y: ' + coordinates.y;
   };
 
   /**
    * Обработка события 'change' формы
    * @param {Object} event
    */
-  var onSubmitFormButtonClick = function (event) {
+  var onNoticeFormChange = function (event) {
     syncRoomsAndGuestsValue();
     syncHousingTypeAndMinPrice();
     syncFieldsValue(event, checkInTimeSelect, checkOutTimeSelect);
     validateTitleField();
-    setAddressCoordinates();
   };
 
   // Активация формы объявления
@@ -151,11 +138,12 @@
     syncRoomsAndGuestsValue();
     // Первичная синхронизация типа жилья и минимальной цены
     syncHousingTypeAndMinPrice();
-    window.util.addEventListener(noticeForm, 'change', onSubmitFormButtonClick);
+    window.util.addEventListener(noticeForm, 'change', onNoticeFormChange);
     window.util.addEventListener(noticeFormTitleField, 'input', onTitleFieldInput);
   };
 
   window.form = {
-    activateNoticeForm: activateNoticeForm
+    activateNoticeForm: activateNoticeForm,
+    setAddressCoordinates: setAddressCoordinates
   };
 }());
