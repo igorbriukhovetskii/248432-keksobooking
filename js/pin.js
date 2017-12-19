@@ -65,9 +65,9 @@
    * @param {Object} event
    */
   var onMapPinClick = function (event) {
-    window.pin.deactivateMapPin(event);
+    deactivateMapPin(event);
     window.card.removeNoticeCard();
-    window.pin.activateMapPin(event);
+    activateMapPin(event);
     window.card.addNoticeCard();
   };
 

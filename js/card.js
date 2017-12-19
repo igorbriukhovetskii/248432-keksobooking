@@ -132,7 +132,7 @@
    */
   var onEscapeButtonKeydown = function (event) {
     if (event.keyCode === ESC_KEYCODE) {
-      window.card.removeNoticeCard();
+      removeNoticeCard();
       window.pin.deactivateMapPin(event);
     }
   };
