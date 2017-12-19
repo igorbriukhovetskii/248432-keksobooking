@@ -78,7 +78,7 @@
     // Добавление фрагмента с указателями на страницу
     mapPinsBlock.appendChild(mapPinsFragment);
     // Добавление обработчика клика на пине
-    window.util.addEventListener(mapPinsBlock, 'click', onMapPinClick);
+    mapPinsBlock.addEventListener('click', onMapPinClick);
   };
 
 

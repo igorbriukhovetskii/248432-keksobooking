@@ -138,8 +138,8 @@
     syncRoomsAndGuestsValue();
     // Первичная синхронизация типа жилья и минимальной цены
     syncHousingTypeAndMinPrice();
-    window.util.addEventListener(noticeForm, 'change', onNoticeFormChange);
-    window.util.addEventListener(noticeFormTitleField, 'input', onTitleFieldInput);
+    noticeForm.addEventListener('change', onNoticeFormChange);
+    noticeFormTitleField.addEventListener('input', onTitleFieldInput);
   };
 
   window.form = {

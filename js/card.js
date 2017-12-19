@@ -142,8 +142,8 @@
     var popup = map.querySelector('.popup');
     var popupCloseButton = popup.querySelector('.popup__close');
 
-    window.util.addEventListener(popupCloseButton, 'click', onPopupCloseClick);
-    window.util.addEventListener(document, 'keydown', onEscapeButtonKeydown);
+    popupCloseButton.addEventListener('click', onPopupCloseClick);
+    document.addEventListener('keydown', onEscapeButtonKeydown);
   };
 
   // Удаление обработчиков событий и отключение механизма закрытия окна карточки объявления
@@ -151,8 +151,8 @@
     var popup = map.querySelector('.popup');
     var popupCloseButton = popup.querySelector('.popup__close');
 
-    window.util.removeEventListener(popupCloseButton, 'click', onPopupCloseClick);
-    window.util.removeEventListener(document, 'keydown', onEscapeButtonKeydown);
+    popupCloseButton.removeEventListener('click', onPopupCloseClick);
+    document.removeEventListener('keydown', onEscapeButtonKeydown);
   };
 
   window.card = {

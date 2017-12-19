@@ -106,15 +106,15 @@
     // Обработчик события 'mouseup'
     var onMouseUp = function () {
       activateMap();
-      window.util.removeEventListener(map, 'mousemove', onMouseMove);
-      window.util.removeEventListener(document, 'mouseup', onMouseUp);
-      window.util.addEventListener(mapPinMain, 'mousedown', onMapPinMainMouseDown);
+      map.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+      mapPinMain.addEventListener('mousedown', onMapPinMainMouseDown);
     };
 
-    window.util.addEventListener(map, 'mousemove', onMouseMove);
-    window.util.addEventListener(document, 'mouseup', onMouseUp);
+    map.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
   };
 
-  window.util.addEventListener(mapPinMain, 'mousedown', onMapPinMainMouseDown);
+  mapPinMain.addEventListener('mousedown', onMapPinMainMouseDown);
   window.form.setAddressCoordinates(getAddressCoordinates());
 })();
