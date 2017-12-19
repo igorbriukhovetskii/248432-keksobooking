@@ -66,9 +66,9 @@
    */
   var onMapPinClick = function (event) {
     deactivateMapPin(event);
-    window.card.removeNoticeCard();
+    window.card.removeCard();
     activateMapPin(event);
-    window.card.addNoticeCard();
+    window.showCard();
   };
 
   // Добавление указателей на карту
