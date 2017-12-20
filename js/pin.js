@@ -84,7 +84,6 @@
 
   window.pin = {
     addMapPins: addMapPins,
-    activateMapPin: activateMapPin,
     deactivateMapPin: deactivateMapPin
   };
 })();

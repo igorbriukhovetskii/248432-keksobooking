@@ -56,7 +56,6 @@
 
   window.card = {
     removeCard: removeCard,
-    enableCardClose: enableCardClose,
-    disableCardClose: disableCardClose
+    enableCardClose: enableCardClose
   };
 }());
