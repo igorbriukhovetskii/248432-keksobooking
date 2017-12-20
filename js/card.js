@@ -42,7 +42,7 @@
     var popupCloseButton = popup.querySelector('.popup__close');
 
     popupCloseButton.addEventListener('click', onPopupCloseClick);
-    document.addEventListener('keydown', onEscapeButtonKeydown);
+    document.addEventListener('keydown', onEscapeButtonKeydown, false);
   };
 
   // Удаление обработчиков событий и отключение механизма закрытия окна карточки объявления
@@ -51,7 +51,7 @@
     var popupCloseButton = popup.querySelector('.popup__close');
 
     popupCloseButton.removeEventListener('click', onPopupCloseClick);
-    document.removeEventListener('keydown', onEscapeButtonKeydown);
+    document.removeEventListener('keydown', onEscapeButtonKeydown, false);
   };
 
   window.card = {

@@ -166,8 +166,8 @@
     });
     // Очистка поля ввода заголовка формы, т. к. Edge игнорирует autocomplete='off'
     setValue(noticeFormTitleField, '');
-    noticeForm.addEventListener('change', onNoticeFormChange);
-    noticeFormTitleField.addEventListener('input', onTitleFieldInput);
+    noticeForm.addEventListener('change', onNoticeFormChange, false);
+    noticeFormTitleField.addEventListener('input', onTitleFieldInput, false);
   };
 
   // Первичная синхронизация селектов количества комнат и гостей
