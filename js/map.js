@@ -108,12 +108,10 @@
       activateMap();
       map.removeEventListener('mousemove', onMouseMove, false);
       document.removeEventListener('mouseup', onMouseUp, false);
-      mapPinMain.addEventListener('mousedown', onMapPinMainMouseDown, false);
     };
 
     map.addEventListener('mousemove', onMouseMove, false);
     document.addEventListener('mouseup', onMouseUp, false);
-    mapPinMain.removeEventListener('mousedown', onMapPinMainMouseDown, false);
   };
 
   mapPinMain.addEventListener('mousedown', onMapPinMainMouseDown, false);
