@@ -73,23 +73,31 @@
   };
 
   /**
-   * Добавление обработчика события
-   * @param {Element} element - элемент на который вешается обработчик
-   * @param {string} eventType - обрабатываемое событие
-   * @param {Function} handler - обработчик
+   * Получение массива значений всех опций HTML-селекта
+   * @param {Element} selectElement
+   * @return {Array}
    */
-  var addEventListener = function (element, eventType, handler) {
-    element.addEventListener(eventType, handler);
+  var getSelectElementOptions = function (selectElement) {
+    var options = [];
+    for (var i = 0; i < selectElement.options.length; i++) {
+      options[i] = selectElement.options[i].value;
+    }
+    return options;
   };
 
   /**
-   * Удаление обработчика события
-   * @param {Element} element - элемент с которого снимается обработчик
-   * @param {string} eventType - обрабатываемое событие
-   * @param {Function} handler - обработчик
+   * Получение значений свойств объекта
+   * @param {Object} object
+   * @return {Array}
    */
-  var removeEventListener = function (element, eventType, handler) {
-    element.removeEventListener(eventType, handler);
+  var getObjectValues = function (object) {
+    var values = [];
+    for (var key in object) {
+      if (object.hasOwnProperty(key)) {
+        values.push(object[key]);
+      }
+    }
+    return values;
   };
 
   window.util = {
@@ -99,7 +107,7 @@
     extractLastArrayElement: extractLastArrayElement,
     getRandomLengthArray: getRandomLengthArray,
     getDocumentFragment: getDocumentFragment,
-    addEventListener: addEventListener,
-    removeEventListener: removeEventListener
+    getSelectElementOptions: getSelectElementOptions,
+    getObjectValues: getObjectValues
   };
 }());

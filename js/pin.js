@@ -66,9 +66,9 @@
    */
   var onMapPinClick = function (event) {
     deactivateMapPin(event);
-    window.card.removeNoticeCard();
+    window.card.removeCard();
     activateMapPin(event);
-    window.card.addNoticeCard();
+    window.showCard();
   };
 
   // Добавление указателей на карту
@@ -78,7 +78,7 @@
     // Добавление фрагмента с указателями на страницу
     mapPinsBlock.appendChild(mapPinsFragment);
     // Добавление обработчика клика на пине
-    window.util.addEventListener(mapPinsBlock, 'click', onMapPinClick);
+    mapPinsBlock.addEventListener('click', onMapPinClick);
   };
 
 
