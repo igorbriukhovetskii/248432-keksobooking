@@ -92,6 +92,7 @@
   // Получение контейнера блока фильтров
   var mapFilters = map.querySelector('.map__filters-container');
 
+  // Показ карточки объявления
   window.showCard = function () {
     var activePin = mapPinsBlock.querySelector('.map__pin--active');
 

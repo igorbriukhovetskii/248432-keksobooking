@@ -72,12 +72,42 @@
     return fragment;
   };
 
+  /**
+   * Получение массива значений всех опций HTML-селекта
+   * @param {Element} selectElement
+   * @return {Array}
+   */
+  var getSelectElementOptions = function (selectElement) {
+    var options = [];
+    for (var i = 0; i < selectElement.options.length; i++) {
+      options[i] = selectElement.options[i].value;
+    }
+    return options;
+  };
+
+  /**
+   * Получение значений свойств объекта
+   * @param {Object} object
+   * @return {Array}
+   */
+  var getObjectValues = function (object) {
+    var values = [];
+    for (var key in object) {
+      if (object.hasOwnProperty(key)) {
+        values.push(object[key]);
+      }
+    }
+    return values;
+  };
+
   window.util = {
     getRandomInteger: getRandomInteger,
     getRandomArrayElement: getRandomArrayElement,
     getShuffledArray: getShuffledArray,
     extractLastArrayElement: extractLastArrayElement,
     getRandomLengthArray: getRandomLengthArray,
-    getDocumentFragment: getDocumentFragment
+    getDocumentFragment: getDocumentFragment,
+    getSelectElementOptions: getSelectElementOptions,
+    getObjectValues: getObjectValues
   };
 }());
