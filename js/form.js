@@ -2,14 +2,14 @@
 
 (function () {
   // Минимальные цены на разные типы жилья
-  var MINIMAL_PRICE_LIST = {
-    'flat': '1000',
-    'bungalo': '0',
-    'house': '5000',
-    'palace': '10000'
+  var MinimalPriceEnum = {
+    'FLAT': 1000,
+    'BUNGALO': 0,
+    'HOUSE': 5000,
+    'PALACE': 10000
   };
   // Соответствие количества комнат в предложении максимальному количеству гостей
-  var ROOMS_MAX_CAPACITY = {
+  var MaxRoomsCapacityEnum = {
     '1': '1',
     '2': '2',
     '3': '3',
@@ -103,7 +103,7 @@
   };
 
   // Получение максимального количества гостей для разного количества комнат
-  var maxGuests = window.util.getObjectValues(ROOMS_MAX_CAPACITY);
+  var maxGuests = window.util.getObjectValues(MaxRoomsCapacityEnum);
 
   // Управление селектами выбора количества комнат и гостей
   var manageGuestNumber = function (event) {
@@ -116,7 +116,7 @@
   };
 
   // Получение минимальных цен из объекта прайслист
-  var minimalPrices = window.util.getObjectValues(MINIMAL_PRICE_LIST);
+  var minimalPrices = window.util.getObjectValues(MinimalPriceEnum);
 
   // Управление миниальной ценой предложения
   var manageMinimalPrice = function () {
