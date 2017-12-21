@@ -167,7 +167,7 @@
   };
 
   // Обработчик события отправки формы
-  var onNoticeFormSubmit = function () {
+  var onNoticeFormSubmit = function (event) {
     var data = new FormData(noticeForm);
     window.backend.upload(data, resetForm, window.backend.onError);
     event.preventDefault();
@@ -183,7 +183,9 @@
     setValue(noticeFormTitleField, '');
     noticeForm.addEventListener('change', onNoticeFormChange, false);
     noticeFormTitleField.addEventListener('input', onTitleFieldInput, false);
-    noticeForm.addEventListener('submit', onNoticeFormSubmit, false);
+    noticeForm.addEventListener('submit', function (event) {
+      onNoticeFormSubmit(event);
+    }, false);
   };
 
   // Первичная синхронизация селектов количества комнат и гостей

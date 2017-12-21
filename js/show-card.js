@@ -93,13 +93,13 @@
   var mapFilters = map.querySelector('.map__filters-container');
 
   // Показ карточки объявления
-  window.showCard = function () {
+  window.showCard = function (offers) {
     var activePin = mapPinsBlock.querySelector('.map__pin--active');
 
     if (activePin && !activePin.classList.contains('map__pin--main')) {
       var index = activePin.dataset.index;
       // Формирование фрагмента с карточкой объявления
-      var card = window.util.getDocumentFragment(window.data.posts[index], renderNoticeCard);
+      var card = window.util.getDocumentFragment(offers[index], renderNoticeCard);
       // Добавление фрагмента с карточкой на страницу
       map.insertBefore(card, mapFilters);
       window.card.enableCardClose();

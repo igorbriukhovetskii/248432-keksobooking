@@ -3,12 +3,13 @@
 (function () {
   var GET_URL = 'https://js.dump.academy/keksobooking/data';
   var POST_URL = 'https://js.dump.academy/keksobooking/';
+  var REQUEST_TIMEOUT = 10000;
 
   // Настройки запроса
   var getSetup = function () {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
-    xhr.timeout = 10000;
+    xhr.timeout = REQUEST_TIMEOUT;
 
     return xhr;
   };

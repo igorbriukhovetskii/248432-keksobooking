@@ -29,14 +29,6 @@
   };
 
   /**
-   * Получение данных объявлений с сервера
-   * @param {Array} data
-   */
-  var getOffersData = function (data) {
-    window.data.posts = data;
-  };
-
-  /**
    * Обработчик события 'mousedown' на главном указателе карты
    * @param {Object} event
    */
@@ -115,12 +107,12 @@
   var onMapPinMainMouseUp = function () {
     removeMapFading();
     window.form.activateNoticeForm();
-    window.pin.addMapPins();
+    // Загрузка информации об объявлениях и добавление указателей на карту
+    window.backend.download(window.pin.addMapPins, window.backend.onError);
     mapPinMain.removeEventListener('mouseup', onMapPinMainMouseUp, false);
   };
 
-  // Получение данных объявлений с сервера
-  window.backend.download(getOffersData, window.backend.onError);
+  // Получение координат главного указателя карты и заполнение поля с адресом
   window.form.setAddressCoordinates(getAddressCoordinates());
   mapPinMain.addEventListener('mousedown', onMapPinMainMouseDown, false);
   mapPinMain.addEventListener('mouseup', onMapPinMainMouseUp, false);
