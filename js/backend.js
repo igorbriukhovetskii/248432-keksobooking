@@ -1,38 +1,54 @@
 'use strict';
 
 (function () {
-  var URL = 'https://js.dump.academy/keksobooking/data';
+  var GET_URL = 'https://js.dump.academy/keksobooking/data';
+  var POST_URL = 'https://js.dump.academy/keksobooking/';
 
-  window.showNetworkError = function (error) {
-    var errorBlock = document.createElement('div');
-
-    errorBlock.innerText = error;
-    errorBlock.classList.add('error-message');
-
-    document.body.insertAdjacentElement('afterbegin', errorBlock);
-  };
-
-  var downloadData = function (onLoad, onError) {
+  // Настройки запроса
+  var getSetup = function () {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
     xhr.timeout = 10000;
 
+    return xhr;
+  };
+
+  /**
+   * Получение строки с ошибкой сети
+   * @param {string} status
+   * @return {string}
+   */
+  var getErrorMessage = function (status) {
+    var errorMessage;
+    switch (status) {
+      case 400:
+        errorMessage = 'Не верный запрос';
+        break;
+      case 401:
+        errorMessage = 'Пользователь не авторизован';
+        break;
+      case 404:
+        errorMessage = 'Данные не найдены';
+        break;
+      default:
+        errorMessage = 'Ошибка доступа: ' + status;
+    }
+
+    return errorMessage;
+  };
+
+  /**
+   * Установка обработчиков событий сети
+   * @param {Object} xhr
+   * @param {Function} onLoad - обаботчик загрузки
+   * @param {Function} onError - обработчик ошибок
+   */
+  var setNetworkEventHandlers = function (xhr, onLoad, onError) {
     xhr.addEventListener('load', function () {
-      switch (xhr.status) {
-        case 200:
-          onLoad(xhr.response);
-          break;
-        case 400:
-          onError('Не верный запрос');
-          break;
-        case 401:
-          onError('Пользователь не авторизован');
-          break;
-        case 404:
-          onError('Данные не найдены');
-          break;
-        default:
-          onError('Ошибка доступа: ' + xhr.status);
+      if (xhr.status === 200) {
+        onLoad(xhr.response);
+      } else {
+        onError(getErrorMessage(xhr.status));
       }
     });
 
@@ -43,12 +59,49 @@
     xhr.addEventListener('timeout', function () {
       onError('Превышено время ожидания для запроса');
     });
+  };
 
-    xhr.open('GET', URL);
+  /**
+   * Показ ошибки на странице
+   * @param {string} error
+   */
+  var showNetworkError = function (error) {
+    var errorBlock = document.createElement('div');
+
+    errorBlock.innerText = error;
+    errorBlock.classList.add('error-message');
+
+    document.body.insertAdjacentElement('afterbegin', errorBlock);
+  };
+
+  /**
+   * Загрузка данных с сервера
+   * @param {Function} onLoad - обработчик загрузки
+   * @param {Function} onError - обработчик ошибок
+   */
+  var downloadData = function (onLoad, onError) {
+    var xhr = getSetup();
+    setNetworkEventHandlers(xhr, onLoad, onError);
+    xhr.open('GET', GET_URL);
     xhr.send();
   };
 
+  /**
+   * Передача данных на сервер
+   * @param {Object} data - информация формы
+   * @param {Function} onLoad - обработчик загрузки
+   * @param {Function} onError - обработчик ошибок
+   */
+  var uploadData = function (data, onLoad, onError) {
+    var xhr = getSetup();
+    setNetworkEventHandlers(xhr, onLoad, onError);
+    xhr.open('POST', POST_URL);
+    xhr.send(data);
+  };
+
   window.backend = {
-    download: downloadData
+    download: downloadData,
+    upload: uploadData,
+    onError: showNetworkError
   };
 })();

@@ -158,6 +158,21 @@
     validateTitleField();
   };
 
+  // Сброс формы объявления в исходное состояние
+  var resetForm = function () {
+    noticeForm.reset();
+    disableGuestsOptions();
+    window.synchronizeFields(roomsValueSelect, capacitySelect, roomsValue, maxGuests, setValue);
+    window.form.setAddressCoordinates(window.map.getAddressCoordinates());
+  };
+
+  // Обработчик события отправки формы
+  var onNoticeFormSubmit = function () {
+    var data = new FormData(noticeForm);
+    window.backend.upload(data, resetForm, window.backend.onError);
+    event.preventDefault();
+  };
+
   // Активация формы объявления
   var activateNoticeForm = function () {
     noticeForm.classList.remove('notice__form--disabled');
@@ -168,6 +183,7 @@
     setValue(noticeFormTitleField, '');
     noticeForm.addEventListener('change', onNoticeFormChange, false);
     noticeFormTitleField.addEventListener('input', onTitleFieldInput, false);
+    noticeForm.addEventListener('submit', onNoticeFormSubmit, false);
   };
 
   // Первичная синхронизация селектов количества комнат и гостей

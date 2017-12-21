@@ -80,6 +80,8 @@
       mapPinsBlock.appendChild(mapPinsFragment);
       // Добавление обработчика клика на пине
       mapPinsBlock.addEventListener('click', onMapPinClick, false);
+    } else {
+      window.backend.onEerror('Не удалось загрузить похожие объявления');
     }
   };
 

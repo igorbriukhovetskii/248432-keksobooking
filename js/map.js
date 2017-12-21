@@ -120,8 +120,12 @@
   };
 
   // Получение данных объявлений с сервера
-  window.backend.download(getOffersData, window.showNetworkError);
+  window.backend.download(getOffersData, window.backend.onError);
   window.form.setAddressCoordinates(getAddressCoordinates());
   mapPinMain.addEventListener('mousedown', onMapPinMainMouseDown, false);
   mapPinMain.addEventListener('mouseup', onMapPinMainMouseUp, false);
+
+  window.map = {
+    getAddressCoordinates: getAddressCoordinates
+  };
 })();
