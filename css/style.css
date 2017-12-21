@@ -847,3 +847,15 @@ textarea:focus
 {
     background-position: -10px -10px;
 }
+
+.error-message {
+  position: fixed;
+  z-index: 10;
+  top: 0;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  color: #ff0000;
+  font-size: 20px;
+  background-color: #deb887;
+}

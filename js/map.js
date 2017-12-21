@@ -28,14 +28,12 @@
     };
   };
 
-  // Активация карты
-  var activateMap = function () {
-    // Отключение затемнения карты
-    removeMapFading();
-    // Активация полей формы
-    window.form.activateNoticeForm();
-    // Добавление пинов на карту
-    window.pin.addMapPins();
+  /**
+   * Получение данных объявлений с сервера
+   * @param {Array} data
+   */
+  var getOffersData = function (data) {
+    window.data.posts = data;
   };
 
   /**
@@ -105,7 +103,6 @@
 
     // Обработчик события 'mouseup'
     var onMouseUp = function () {
-      activateMap();
       map.removeEventListener('mousemove', onMouseMove, false);
       document.removeEventListener('mouseup', onMouseUp, false);
     };
@@ -114,6 +111,17 @@
     document.addEventListener('mouseup', onMouseUp, false);
   };
 
-  mapPinMain.addEventListener('mousedown', onMapPinMainMouseDown, false);
+  // Обработчик 'mouseup' на главном указателе карты
+  var onMapPinMainMouseUp = function () {
+    removeMapFading();
+    window.form.activateNoticeForm();
+    window.pin.addMapPins();
+    mapPinMain.removeEventListener('mouseup', onMapPinMainMouseUp, false);
+  };
+
+  // Получение данных объявлений с сервера
+  window.backend.download(getOffersData, window.showNetworkError);
   window.form.setAddressCoordinates(getAddressCoordinates());
+  mapPinMain.addEventListener('mousedown', onMapPinMainMouseDown, false);
+  mapPinMain.addEventListener('mouseup', onMapPinMainMouseUp, false);
 })();

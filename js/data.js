@@ -71,6 +71,6 @@
   getPosts();
 
   window.data = {
-    posts: posts
+    posts: []
   };
 }());

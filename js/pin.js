@@ -73,12 +73,14 @@
 
   // Добавление указателей на карту
   var addMapPins = function () {
-    // Формирование фрагмента с указателями на карте
-    var mapPinsFragment = window.util.getDocumentFragment(window.data.posts, renderMapPin);
-    // Добавление фрагмента с указателями на страницу
-    mapPinsBlock.appendChild(mapPinsFragment);
-    // Добавление обработчика клика на пине
-    mapPinsBlock.addEventListener('click', onMapPinClick, false);
+    if (window.data.posts.length) {
+      // Формирование фрагмента с указателями на карте
+      var mapPinsFragment = window.util.getDocumentFragment(window.data.posts, renderMapPin);
+      // Добавление фрагмента с указателями на страницу
+      mapPinsBlock.appendChild(mapPinsFragment);
+      // Добавление обработчика клика на пине
+      mapPinsBlock.addEventListener('click', onMapPinClick, false);
+    }
   };
 
 
