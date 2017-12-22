@@ -35,13 +35,15 @@
   /**
    * Активация указателя на карте
    * @param {Object} event
+   * @param {Array} offers - массив объявлений о сдаче жилья
    */
-  var activateMapPin = function (event) {
+  var activateMapPin = function (event, offers) {
     var target = event.target;
     var currentPin = target.closest('.map__pin');
 
     if (currentPin) {
       currentPin.classList.add('map__pin--active');
+      window.showCard(offers);
     }
   };
 
@@ -57,34 +59,39 @@
 
     if (activePin && eventTargetCondition || eventKeycodeCondition) {
       activePin.classList.remove('map__pin--active');
+      window.card.removeCard();
     }
   };
 
   /**
    * Обработчик события click на указателе карты
    * @param {Object} event
+   * @param {Array} offers - массив объявлений о сдаче жилья
    */
-  var onMapPinClick = function (event) {
+  var onMapPinClick = function (event, offers) {
     deactivateMapPin(event);
-    window.card.removeCard();
-    activateMapPin(event);
-    window.showCard();
+    activateMapPin(event, offers);
   };
 
   // Добавление указателей на карту
-  var addMapPins = function () {
-    // Формирование фрагмента с указателями на карте
-    var mapPinsFragment = window.util.getDocumentFragment(window.data.posts, renderMapPin);
-    // Добавление фрагмента с указателями на страницу
-    mapPinsBlock.appendChild(mapPinsFragment);
-    // Добавление обработчика клика на пине
-    mapPinsBlock.addEventListener('click', onMapPinClick);
+  var addMapPins = function (offers) {
+    if (offers.length) {
+      // Формирование фрагмента с указателями на карте
+      var mapPinsFragment = window.util.getDocumentFragment(offers, renderMapPin);
+      // Добавление фрагмента с указателями на страницу
+      mapPinsBlock.appendChild(mapPinsFragment);
+      // Добавление обработчика клика на пине
+      mapPinsBlock.addEventListener('click', function (event) {
+        onMapPinClick(event, offers);
+      }, false);
+    } else {
+      window.backend.onError('Не удалось загрузить похожие объявления');
+    }
   };
 
 
   window.pin = {
     addMapPins: addMapPins,
-    activateMapPin: activateMapPin,
     deactivateMapPin: deactivateMapPin
   };
 })();

@@ -28,16 +28,6 @@
     };
   };
 
-  // Активация карты
-  var activateMap = function () {
-    // Отключение затемнения карты
-    removeMapFading();
-    // Активация полей формы
-    window.form.activateNoticeForm();
-    // Добавление пинов на карту
-    window.pin.addMapPins();
-  };
-
   /**
    * Обработчик события 'mousedown' на главном указателе карты
    * @param {Object} event
@@ -105,17 +95,29 @@
 
     // Обработчик события 'mouseup'
     var onMouseUp = function () {
-      activateMap();
-      map.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseup', onMouseUp);
-      mapPinMain.addEventListener('mousedown', onMapPinMainMouseDown);
+      map.removeEventListener('mousemove', onMouseMove, false);
+      document.removeEventListener('mouseup', onMouseUp, false);
     };
 
-    map.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
-    mapPinMain.removeEventListener('mousedown', onMapPinMainMouseDown);
+    map.addEventListener('mousemove', onMouseMove, false);
+    document.addEventListener('mouseup', onMouseUp, false);
   };
 
-  mapPinMain.addEventListener('mousedown', onMapPinMainMouseDown);
+  // Обработчик 'mouseup' на главном указателе карты
+  var onMapPinMainMouseUp = function () {
+    removeMapFading();
+    window.form.activateNoticeForm();
+    // Загрузка информации об объявлениях и добавление указателей на карту
+    window.backend.download(window.pin.addMapPins, window.backend.onError);
+    mapPinMain.removeEventListener('mouseup', onMapPinMainMouseUp, false);
+  };
+
+  // Получение координат главного указателя карты и заполнение поля с адресом
   window.form.setAddressCoordinates(getAddressCoordinates());
+  mapPinMain.addEventListener('mousedown', onMapPinMainMouseDown, false);
+  mapPinMain.addEventListener('mouseup', onMapPinMainMouseUp, false);
+
+  window.map = {
+    getAddressCoordinates: getAddressCoordinates
+  };
 })();

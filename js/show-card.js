@@ -1,10 +1,10 @@
 'use strict';
 
 (function () {
-  var OFFER_TYPES_VOCABULARY = {
-    flat: 'Квартира',
-    house: 'Дом',
-    bungalo: 'Бунгало'
+  var OfferTypeEnum = {
+    'FLAT': 'Квартира',
+    'HOUSE': 'Дом',
+    'BUNGALO': 'Бунгало'
   };
 
   /**
@@ -76,7 +76,7 @@
     cardHeader.innerText = post.offer.title;
     cardAddress.innerText = post.offer.address;
     cardPrice.innerHTML = post.offer.price + '&#x20bd;/ночь';
-    cardOfferType.innerText = OFFER_TYPES_VOCABULARY[post.offer.type];
+    cardOfferType.innerText = OfferTypeEnum[post.offer.type.toString().toUpperCase()];
     cardParagraphs[2].innerText = getCardGuestsAndRoomsString(post);
     cardParagraphs[3].innerText = 'Заезд после ' + post.offer.checkin + ', выезд до ' + post.offer.checkout;
     cardOfferFeatures.innerHTML = getFeaturesString(post);
@@ -93,13 +93,13 @@
   var mapFilters = map.querySelector('.map__filters-container');
 
   // Показ карточки объявления
-  window.showCard = function () {
+  window.showCard = function (offers) {
     var activePin = mapPinsBlock.querySelector('.map__pin--active');
 
     if (activePin && !activePin.classList.contains('map__pin--main')) {
       var index = activePin.dataset.index;
       // Формирование фрагмента с карточкой объявления
-      var card = window.util.getDocumentFragment(window.data.posts[index], renderNoticeCard);
+      var card = window.util.getDocumentFragment(offers[index], renderNoticeCard);
       // Добавление фрагмента с карточкой на страницу
       map.insertBefore(card, mapFilters);
       window.card.enableCardClose();

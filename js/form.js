@@ -2,14 +2,14 @@
 
 (function () {
   // Минимальные цены на разные типы жилья
-  var MINIMAL_PRICE_LIST = {
-    'flat': '1000',
-    'bungalo': '0',
-    'house': '5000',
-    'palace': '10000'
+  var MinimalPriceEnum = {
+    'FLAT': 1000,
+    'BUNGALO': 0,
+    'HOUSE': 5000,
+    'PALACE': 10000
   };
   // Соответствие количества комнат в предложении максимальному количеству гостей
-  var ROOMS_MAX_CAPACITY = {
+  var MaxRoomsCapacityEnum = {
     '1': '1',
     '2': '2',
     '3': '3',
@@ -103,7 +103,7 @@
   };
 
   // Получение максимального количества гостей для разного количества комнат
-  var maxGuests = window.util.getObjectValues(ROOMS_MAX_CAPACITY);
+  var maxGuests = window.util.getObjectValues(MaxRoomsCapacityEnum);
 
   // Управление селектами выбора количества комнат и гостей
   var manageGuestNumber = function (event) {
@@ -116,7 +116,7 @@
   };
 
   // Получение минимальных цен из объекта прайслист
-  var minimalPrices = window.util.getObjectValues(MINIMAL_PRICE_LIST);
+  var minimalPrices = window.util.getObjectValues(MinimalPriceEnum);
 
   // Управление миниальной ценой предложения
   var manageMinimalPrice = function () {
@@ -158,6 +158,21 @@
     validateTitleField();
   };
 
+  // Сброс формы объявления в исходное состояние
+  var resetForm = function () {
+    noticeForm.reset();
+    disableGuestsOptions();
+    window.synchronizeFields(roomsValueSelect, capacitySelect, roomsValue, maxGuests, setValue);
+    window.form.setAddressCoordinates(window.map.getAddressCoordinates());
+  };
+
+  // Обработчик события отправки формы
+  var onNoticeFormSubmit = function (event) {
+    var data = new FormData(noticeForm);
+    window.backend.upload(data, resetForm, window.backend.onError);
+    event.preventDefault();
+  };
+
   // Активация формы объявления
   var activateNoticeForm = function () {
     noticeForm.classList.remove('notice__form--disabled');
@@ -166,8 +181,11 @@
     });
     // Очистка поля ввода заголовка формы, т. к. Edge игнорирует autocomplete='off'
     setValue(noticeFormTitleField, '');
-    noticeForm.addEventListener('change', onNoticeFormChange);
-    noticeFormTitleField.addEventListener('input', onTitleFieldInput);
+    noticeForm.addEventListener('change', onNoticeFormChange, false);
+    noticeFormTitleField.addEventListener('input', onTitleFieldInput, false);
+    noticeForm.addEventListener('submit', function (event) {
+      onNoticeFormSubmit(event);
+    }, false);
   };
 
   // Первичная синхронизация селектов количества комнат и гостей
