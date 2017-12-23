@@ -1,6 +1,9 @@
 'use strict';
 
 (function () {
+  var DEBOUNCE_TIMEOUT = 500;
+  var lastDebounceTimeout;
+
   /**
    * Получение случайного целого числа в заданном диапазоне
    * @param {number} maxValue - максимальное возможное число
@@ -100,6 +103,37 @@
     return values;
   };
 
+  /**
+   * Скрытие элементов на странице
+   * @param {Element[]} elements
+   */
+  var hideElements = function (elements) {
+    Array.prototype.forEach.call(elements, function (element) {
+      element.classList.add('hidden');
+    });
+  };
+
+  /**
+   * Показ скрытых элементов на странице
+   * @param {Element[]} elements
+   */
+  var showElements = function (elements) {
+    Array.prototype.forEach.call(elements, function (element) {
+      element.classList.remove('hidden');
+    });
+  };
+
+  /**
+   * Отложенное выполнение функции
+   * @param {Function} callback
+   */
+  var debounce = function (callback) {
+    if (lastDebounceTimeout) {
+      clearTimeout(lastDebounceTimeout);
+    }
+    lastDebounceTimeout = setTimeout(callback, DEBOUNCE_TIMEOUT);
+  };
+
   window.util = {
     getRandomInteger: getRandomInteger,
     getRandomArrayElement: getRandomArrayElement,
@@ -108,6 +142,9 @@
     getRandomLengthArray: getRandomLengthArray,
     getDocumentFragment: getDocumentFragment,
     getSelectElementOptions: getSelectElementOptions,
-    getObjectValues: getObjectValues
+    getObjectValues: getObjectValues,
+    hideElements: hideElements,
+    showElements: showElements,
+    debounce: debounce
   };
 }());
