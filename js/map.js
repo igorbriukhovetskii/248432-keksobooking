@@ -109,13 +109,13 @@
     window.form.activateNoticeForm();
     // Загрузка информации об объявлениях и добавление указателей на карту
     window.backend.download(window.pin.addMapPins, window.backend.onError);
-    mapPinMain.removeEventListener('mouseup', onMapPinMainMouseUp, false);
+    document.removeEventListener('mouseup', onMapPinMainMouseUp, false);
   };
 
   // Получение координат главного указателя карты и заполнение поля с адресом
   window.form.setAddressCoordinates(getAddressCoordinates());
   mapPinMain.addEventListener('mousedown', onMapPinMainMouseDown, false);
-  mapPinMain.addEventListener('mouseup', onMapPinMainMouseUp, false);
+  document.addEventListener('mouseup', onMapPinMainMouseUp, false);
 
   window.map = {
     getAddressCoordinates: getAddressCoordinates
