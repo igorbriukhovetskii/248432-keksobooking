@@ -64,7 +64,7 @@
       // Условие деактивации указателя: нажата клавиша ESC
       var eventKeycodeCondition = (event.keyCode === ESC_KEYCODE);
       // Условие деактивации указателя: событие зарегистрировано на блоке фильтров карты
-      var eventCurrentTargetCondition = (event.currentTarget.classList.contains('map__filters-container'));
+      var eventCurrentTargetCondition = (event.currentTarget !== document) && (event.currentTarget.classList.contains('map__filters-container'));
 
       if (eventTargetCondition || eventKeycodeCondition || eventCurrentTargetCondition) {
         activePin.classList.remove('map__pin--active');
