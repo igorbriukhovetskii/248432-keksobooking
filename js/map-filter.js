@@ -102,7 +102,7 @@
   var filters = [filterType, filterRooms, filterGuests, filterPrice, filterFeature];
 
   /**
-   * Фильтрация массива указателей карты по выбранным значениям фильтров
+   * Фильтрация коллекции указателей карты по выбранным значениям фильтров
    * @param {Element[]} pins
    * @return {Array}
    */
