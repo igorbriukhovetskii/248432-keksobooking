@@ -86,9 +86,6 @@
   // Синхронизация количества комнат с возможным количеством гостей
   var disableGuestsOptions = function () {
     var roomsNumber = roomsValueSelect.value;
-    // Изменение значения селекта количиства гостей в зависимости от выбранного кол-ва комнат
-    // capacitySelect.value = roomsValue !== '100' ? roomsValue : '0';
-
     // Если выбран пункт '100 комнат', деактивируются все опции, кроме 'не для гостей'
     if (roomsNumber === '100') {
       Array.prototype.forEach.call(capacitySelect.options, function (option) {
@@ -110,7 +107,7 @@
     // Отключение недоступных вариантов в селекте выбора количества гостей
     disableGuestsOptions();
     // Синхронизация количества комнат с количеством гостей
-    if (event.target === roomsValueSelect) {
+    if (event.target === roomsValueSelect || event.type === 'DOMContentLoaded') {
       window.synchronizeFields(roomsValueSelect, capacitySelect, roomsValue, maxGuests, setValue);
     }
   };
@@ -188,11 +185,9 @@
     }, false);
   };
 
-  // Первичная синхронизация селектов количества комнат и гостей
-  window.synchronizeFields(roomsValueSelect, capacitySelect, roomsValue, maxGuests, setValue);
-
   window.form = {
     activateNoticeForm: activateNoticeForm,
-    setAddressCoordinates: setAddressCoordinates
+    setAddressCoordinates: setAddressCoordinates,
+    manageGuestNumber: manageGuestNumber
   };
 }());

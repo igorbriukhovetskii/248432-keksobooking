@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var DEBOUNCE_TIMEOUT = 500;
+  var DEBOUNCE_TIMEOUT = 400;
   var lastDebounceTimeout;
 
   /**

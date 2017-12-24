@@ -14,32 +14,37 @@
   var roomsFilter = filtersBlock.querySelector('#housing-rooms');
   // Селект выбора количества гостей
   var capacityFilter = filtersBlock.querySelector('#housing-guests');
-  // Блок чекбоксов типами удобств
+  // Блок чекбоксов с типами удобств
   var featuresFilters = filtersBlock.querySelectorAll('[name="features"]');
 
   /**
-   * Фильтрация указателей карты
-   * @param {Element[]|Array} pins - коллекция указателей карты
+   * Проверка указателя карты на соответствие имени data-атрибута значению селекта фильтра
    * @param {string} dataName - имя data-атрибута
    * @param {string} filterValue - значение фильтра
-   * @return {Array}
+   * @return {Function}
    */
-  var filterByValue = function (pins, dataName, filterValue) {
-    return Array.prototype.filter.call(pins, function (pin) {
-      return pin.dataset[dataName] === filterValue ? true : filterValue === 'any';
-    });
+  var filterByValue = function (dataName, filterValue) {
+    /**
+     * @param {Element} pin - указатель карты
+     * @return {boolean}
+     */
+    return function (pin) {
+      return pin.dataset[dataName] === filterValue.value ? true : filterValue.value === 'any';
+    };
   };
 
   /**
-   * Фильтрация указателей карты по цене объявления
-   * @param {Element[]|Array} pins - коллекция указателей карты
-   * @param {string} dataName - имя data-атрибута
+   * Проверка соответствия значения data-price указателя карты выбранному в фильтре значению цены
    * @param {string} filterValue - значение фильтра
-   * @return {Array}
+   * @return {Function}
    */
-  var filterByPrice = function (pins, dataName, filterValue) {
-    return Array.prototype.filter.call(pins, function (pin) {
-      switch (filterValue) {
+  var filterByPrice = function (filterValue) {
+    /**
+     * @param {Element} pin - указатель карты
+     * @return {boolean}
+     */
+    return function (pin) {
+      switch (filterValue.value) {
         case 'low':
           return pin.dataset.price < MINIMAL_PRICE;
         case 'middle':
@@ -49,58 +54,64 @@
         default:
           return true;
       }
-    });
+    };
   };
 
   /**
-   * Фильтрация указателей карты по удобствам
-   * @param {Element[]|Array} pins - коллекция указателей карты
+   * Проверка наличия в data-features указателя карты выбранных в фильтре удобств
    * @param {Element[]|Array} featuresCheckboxes - коллекция чебоксов в блоке фильтра по удобствам
-   * @return {Array}
+   * @return {Function}
    */
-  var filterByFeatures = function (pins, featuresCheckboxes) {
-    // Получение массива с отмеченными чекбоксами
-    var checkedFeatures = Array.prototype.filter.call(featuresCheckboxes, function (feature) {
-      return feature.checked;
-    });
-
-    // Формирование строки для поиска наличия удобств
-    var regExp = '';
-    checkedFeatures.forEach(function (feature) {
-      regExp += '(?:' + feature.value + ').*';
-    });
-
-    // Поиск наличия удобств
-    if (checkedFeatures.length) {
-      return Array.prototype.filter.call(pins, function (pin) {
-        return pin.dataset.features.match(regExp);
+  var filterByFeatures = function (featuresCheckboxes) {
+    /**
+     * @param {Element} pin - указатель карты
+     * @return {boolean}
+     */
+    return function (pin) {
+      // Получение массива с отмеченными чекбоксами
+      var checkedFeatures = Array.prototype.filter.call(featuresCheckboxes, function (feature) {
+        return feature.checked;
       });
-    } else {
-      return pins;
-    }
+
+      // Формирование строки для поиска наличия удобств
+      var regExp = '';
+      checkedFeatures.forEach(function (feature) {
+        regExp += '(?:' + feature.value + ').*';
+      });
+
+      // Поиск наличия удобств
+      if (checkedFeatures.length) {
+        return pin.dataset.features.match(regExp);
+      } else {
+        return true;
+      }
+    };
   };
 
+  // Фильтр по типу жилья
+  var filterType = filterByValue('type', housingFilter);
+  // Фильтр по количеству комнат
+  var filterRooms = filterByValue('rooms', roomsFilter);
+  // Фильтр по количеству гостей
+  var filterGuests = filterByValue('guests', capacityFilter);
+  // Фильтр по цене
+  var filterPrice = filterByPrice(priceFilter);
+  // Фильтр по удобствам
+  var filterFeature = filterByFeatures(featuresFilters);
+
+  var filters = [filterType, filterRooms, filterGuests, filterPrice, filterFeature];
+
   /**
-   * Получение отфильтрованного массива указателей карты
-   * @param {Element[]|Array} pins - коллекция указателей карты
+   * Фильтрация массива указателей карты по выбранным значениям фильтров
+   * @param {Element[]} pins
    * @return {Array}
    */
   var getFilteredPins = function (pins) {
-    var filteredPins = filterByValue(pins, 'type', housingFilter.value);
-    if (filteredPins.length) {
-      filteredPins = filterByValue(filteredPins, 'rooms', roomsFilter.value);
-    }
-    if (filteredPins.length) {
-      filteredPins = filterByValue(filteredPins, 'guests', capacityFilter.value);
-    }
-    if (filteredPins.length) {
-      filteredPins = filterByPrice(filteredPins, 'price', priceFilter.value);
-    }
-    if (filteredPins.length) {
-      filteredPins = filterByFeatures(filteredPins, featuresFilters);
-    }
-
-    return filteredPins;
+    return Array.prototype.filter.call(pins, function (pin) {
+      return filters.every(function (filter) {
+        return filter(pin);
+      });
+    });
   };
 
   window.mapFilter = {
