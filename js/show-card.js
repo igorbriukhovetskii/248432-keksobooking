@@ -1,10 +1,10 @@
 'use strict';
 
 (function () {
-  var OfferTypeEnum = {
-    'FLAT': 'Квартира',
-    'HOUSE': 'Дом',
-    'BUNGALO': 'Бунгало'
+  var offerTypeToHousingType = {
+    'flat': 'Квартира',
+    'house': 'Дом',
+    'bungalo': 'Бунгало'
   };
 
   /**
@@ -59,7 +59,7 @@
 
   /**
    * Подготовка карточки объявления по шаблону
-   * @param {Object} post - элемент сгенерированного массива случайных объявлений
+   * @param {Object} post - элемент массива объявлений
    * @return {Node} - продготовленная к вставке в DOM карточка объявления
    */
   var renderNoticeCard = function (post) {
@@ -76,7 +76,7 @@
     cardHeader.innerText = post.offer.title;
     cardAddress.innerText = post.offer.address;
     cardPrice.innerHTML = post.offer.price + '&#x20bd;/ночь';
-    cardOfferType.innerText = OfferTypeEnum[post.offer.type.toString().toUpperCase()];
+    cardOfferType.innerText = offerTypeToHousingType[post.offer.type];
     cardParagraphs[2].innerText = getCardGuestsAndRoomsString(post);
     cardParagraphs[3].innerText = 'Заезд после ' + post.offer.checkin + ', выезд до ' + post.offer.checkout;
     cardOfferFeatures.innerHTML = getFeaturesString(post);

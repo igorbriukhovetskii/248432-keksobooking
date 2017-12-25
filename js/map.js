@@ -109,13 +109,25 @@
     window.form.activateNoticeForm();
     // Загрузка информации об объявлениях и добавление указателей на карту
     window.backend.download(window.pin.addMapPins, window.backend.onError);
-    mapPinMain.removeEventListener('mouseup', onMapPinMainMouseUp, false);
+    document.removeEventListener('mouseup', onMapPinMainMouseUp, false);
   };
 
-  // Получение координат главного указателя карты и заполнение поля с адресом
-  window.form.setAddressCoordinates(getAddressCoordinates());
-  mapPinMain.addEventListener('mousedown', onMapPinMainMouseDown, false);
-  mapPinMain.addEventListener('mouseup', onMapPinMainMouseUp, false);
+  /**
+   * Обработчик загрузки страницы
+   * @param {Object} event
+   */
+  var onDOMContentLoaded = function (event) {
+    // Синхронизация количества комнат и гостей
+    window.form.manageGuestNumber(event);
+    // Получение координат главного указателя карты и заполнение поля с адресом
+    window.form.setAddressCoordinates(getAddressCoordinates());
+
+    mapPinMain.addEventListener('mousedown', onMapPinMainMouseDown, false);
+    document.addEventListener('mouseup', onMapPinMainMouseUp, false);
+    document.removeEventListener('DOMContentLoaded', onDOMContentLoaded, false);
+  };
+
+  document.addEventListener('DOMContentLoaded', onDOMContentLoaded, false);
 
   window.map = {
     getAddressCoordinates: getAddressCoordinates
