@@ -173,6 +173,12 @@
     window.photo.initializeGallery();
   };
 
+  // Обработчик успешной отправки формы
+  var onSuccesSubmit = function () {
+    window.util.showMessage('Данные формы успешно отправлены');
+    resetForm();
+  };
+
   resetButton.addEventListener('click', function () {
     event.preventDefault();
     resetForm();
@@ -181,7 +187,7 @@
   // Обработчик события отправки формы
   var onNoticeFormSubmit = function (event) {
     var data = new FormData(noticeForm);
-    window.backend.upload(data, resetForm, window.backend.onError);
+    window.backend.upload(data, onSuccesSubmit, window.backend.onError);
     event.preventDefault();
   };
 

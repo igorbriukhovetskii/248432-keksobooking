@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  // Допустимые форматы изображения
+  var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
   // Контейнер для фотогалереи
   var photoContainer = document.querySelector('.form__photo-container');
   // Шаблон
@@ -70,6 +72,26 @@
     removeImage(event);
   }, false);
 
+  /**
+   * Проверка формата изображения
+   * @param {File} data
+   * @return {boolean}
+   */
+  var checkFilesFormat = function (data) {
+    data = data || 'none';
+    var fileName = data.name.toLowerCase();
+
+    var isCorrect = FILE_TYPES.some(function (type) {
+      return fileName.endsWith(type);
+    });
+
+    if (!isCorrect) {
+      window.util.showMessage('Неверный формат изображения');
+    }
+
+    return isCorrect;
+  };
+
   // Поле загрузки аватара (скрытый input[type=file])
   var avatarInput = document.querySelector('#avatar');
 
@@ -78,14 +100,14 @@
     var reader = new FileReader();
     var image = avatarInput.files[0];
 
-    reader.addEventListener('load', function () {
-      avatarPreview.src = reader.result;
-    });
+    if (checkFilesFormat(image)) {
+      reader.addEventListener('load', function () {
+        avatarPreview.src = reader.result;
+      });
+    }
 
     reader.readAsDataURL(image);
   };
-
-  avatarInput.addEventListener('change', onAvatarInputChange, false);
 
   // Поле загрузки фотографий жилья (скрытый input[type=file])
   var photoInput = document.querySelector('#images');
@@ -95,14 +117,14 @@
     var reader = new FileReader();
     var image = photoInput.files[0];
 
-    reader.addEventListener('load', function () {
-      addImage(reader.result);
-    });
+    if (checkFilesFormat(image)) {
+      reader.addEventListener('load', function () {
+        addImage(reader.result);
+      });
+    }
 
     reader.readAsDataURL(image);
   };
-
-  photoInput.addEventListener('change', onPhotoInputChange, false);
 
   /**
    * Обработчик события 'drop'
@@ -112,26 +134,23 @@
     var reader = new FileReader();
     var image = event.dataTransfer.files[0];
 
-    if (event.target === avatarDropZone) {
+    if (event.target === avatarDropZone && checkFilesFormat(image)) {
       reader.addEventListener('load', function () {
         avatarPreview.src = reader.result;
       });
     }
 
-    if (event.target === photoDropZone) {
+    if (event.target === photoDropZone && checkFilesFormat(image)) {
       reader.addEventListener('load', function () {
         addImage(reader.result);
       });
     }
 
-    reader.addEventListener('load', function () {
-      if (event.target === avatarDropZone) {
-        avatarPreview.src = reader.result;
-      }
-    });
-
     reader.readAsDataURL(image);
   };
+
+  avatarInput.addEventListener('change', onAvatarInputChange, false);
+  photoInput.addEventListener('change', onPhotoInputChange, false);
 
   // Дропзона аватара
   var avatarDropZone = document.querySelector('#avatar-drop-zone');
