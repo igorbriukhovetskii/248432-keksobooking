@@ -109,7 +109,7 @@
     window.form.activateNoticeForm();
     // Загрузка информации об объявлениях и добавление указателей на карту
     window.backend.download(window.pin.addMapPins, window.backend.onError);
-    document.removeEventListener('mouseup', onMapPinMainMouseUp, false);
+    mapPinMain.removeEventListener('mouseup', onMapPinMainMouseUp, false);
   };
 
   /**
@@ -123,7 +123,7 @@
     window.form.setAddressCoordinates(getAddressCoordinates());
 
     mapPinMain.addEventListener('mousedown', onMapPinMainMouseDown, false);
-    document.addEventListener('mouseup', onMapPinMainMouseUp, false);
+    mapPinMain.addEventListener('mouseup', onMapPinMainMouseUp, false);
     document.removeEventListener('DOMContentLoaded', onDOMContentLoaded, false);
   };
 
