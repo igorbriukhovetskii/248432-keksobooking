@@ -2,14 +2,14 @@
 
 (function () {
   // Минимальные цены на разные типы жилья
-  var MinimalPriceEnum = {
+  var MINIMAL_PRICE_ENUM = {
     'FLAT': 1000,
     'BUNGALO': 0,
     'HOUSE': 5000,
     'PALACE': 10000
   };
   // Соответствие количества комнат в предложении максимальному количеству гостей
-  var MaxRoomsCapacityEnum = {
+  var MAX_ROOMS_CAPACITY_ENUM = {
     '1': '1',
     '2': '2',
     '3': '3',
@@ -30,12 +30,13 @@
   // Валидация поля ввода заголовка объявления
   var validateTitleField = function () {
     var titleMinLength = noticeFormTitleField.getAttribute('minlength');
+    var tooShortTitle = noticeFormTitleField.validity.tooShort;
+    var titleLength = noticeFormTitleField.value.length;
+    var validityMessage = 'Заголовок не может быть короче ' + titleMinLength + ' символов. Сейчас ' + titleLength + '.';
 
-    if (noticeFormTitleField.value.length < titleMinLength || noticeFormTitleField.validity.tooShort) {
-      noticeFormTitleField.setCustomValidity('Заголовок не может быть короче ' + titleMinLength + ' символов. Сейчас ' + noticeFormTitleField.value.length + '.');
-    } else {
-      noticeFormTitleField.setCustomValidity('');
-    }
+    validityMessage = (titleLength < titleMinLength || tooShortTitle) ? validityMessage : '';
+    noticeFormTitleField.setCustomValidity(validityMessage);
+
     toggleFieldOutline(noticeFormTitleField);
   };
 
@@ -100,7 +101,7 @@
   };
 
   // Получение максимального количества гостей для разного количества комнат
-  var maxGuests = window.util.getObjectValues(MaxRoomsCapacityEnum);
+  var maxGuests = window.util.getObjectValues(MAX_ROOMS_CAPACITY_ENUM);
 
   // Управление селектами выбора количества комнат и гостей
   var manageGuestNumber = function (event) {
@@ -113,7 +114,7 @@
   };
 
   // Получение минимальных цен из объекта прайслист
-  var minimalPrices = window.util.getObjectValues(MinimalPriceEnum);
+  var minimalPrices = window.util.getObjectValues(MINIMAL_PRICE_ENUM);
 
   // Управление миниальной ценой предложения
   var manageMinimalPrice = function () {
@@ -128,10 +129,12 @@
    * @param {Object} event
    */
   var synchronizeTimes = function (event) {
-    if (event.target === checkInTimeSelect) {
-      window.synchronizeFields(checkInTimeSelect, checkOutTimeSelect, checkinTimes, checkoutTimes, setValue);
-    } else if (event.target === checkOutTimeSelect) {
-      window.synchronizeFields(checkOutTimeSelect, checkInTimeSelect, checkoutTimes, checkinTimes, setValue);
+    switch (event.target) {
+      case checkInTimeSelect:
+        window.synchronizeFields(checkInTimeSelect, checkOutTimeSelect, checkinTimes, checkoutTimes, setValue);
+        break;
+      case checkOutTimeSelect:
+        window.synchronizeFields(checkOutTimeSelect, checkInTimeSelect, checkoutTimes, checkinTimes, setValue);
     }
   };
 

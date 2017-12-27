@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var offerTypeToHousingType = {
+  var OFFER_TYPE_TO_HOUSING_TYPE = {
     'flat': 'Квартира',
     'house': 'Дом',
     'bungalo': 'Бунгало'
@@ -76,7 +76,7 @@
     cardHeader.innerText = post.offer.title;
     cardAddress.innerText = post.offer.address;
     cardPrice.innerHTML = post.offer.price + '&#x20bd;/ночь';
-    cardOfferType.innerText = offerTypeToHousingType[post.offer.type];
+    cardOfferType.innerText = OFFER_TYPE_TO_HOUSING_TYPE[post.offer.type];
     cardParagraphs[2].innerText = getCardGuestsAndRoomsString(post);
     cardParagraphs[3].innerText = 'Заезд после ' + post.offer.checkin + ', выезд до ' + post.offer.checkout;
     cardOfferFeatures.innerHTML = getFeaturesString(post);

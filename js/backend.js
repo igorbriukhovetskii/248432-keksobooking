@@ -46,11 +46,7 @@
    */
   var setNetworkEventHandlers = function (xhr, onLoad, onError) {
     xhr.addEventListener('load', function () {
-      if (xhr.status === 200) {
-        onLoad(xhr.response);
-      } else {
-        onError(getErrorMessage(xhr.status));
-      }
+      return (xhr.status === 200) ? onLoad(xhr.response) : onError(getErrorMessage(xhr.status));
     });
 
     xhr.addEventListener('error', function () {

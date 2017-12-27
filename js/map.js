@@ -65,29 +65,37 @@
       var minYcoordinate = 100;
       // Максимальная координата указателя по вертикали
       var maxYcoordinate = 500;
+      // Минимальная координата указателя по горизонтали
+      var minXcoordinate = 0;
+      // Максимальная координата указателя по горизонтали
+      var maxXcoordinate = parseInt(getComputedStyle(map).getPropertyValue('width'), 10);
+      // Ограничения позиции указателя с учётом его размеров
+      var pinPositionLimit = {
+        top: minYcoordinate + pinFullHeight,
+        bottom: maxYcoordinate + pinFullHeight,
+        left: minXcoordinate + pinHeadWidth,
+        right: maxXcoordinate - pinHeadWidth
+      };
 
       // Проверка нахождения указателя в пределах ограничений по вертикали
       // с учётом вертикальных размеров указателя
-      if (newPinCoordinates.y <= minYcoordinate + pinFullHeight) {
-        newPinCoordinates.y = minYcoordinate + pinFullHeight;
-      } else if (newPinCoordinates.y >= maxYcoordinate + pinFullHeight) {
-        newPinCoordinates.y = maxYcoordinate + pinFullHeight;
-      }
+      var topEdge = newPinCoordinates.y <= pinPositionLimit.top;
+      var bottomEdge = newPinCoordinates.y >= pinPositionLimit.bottom;
+
+      newPinCoordinates.y = topEdge ? pinPositionLimit.top : newPinCoordinates.y;
+      newPinCoordinates.y = bottomEdge ? pinPositionLimit.bottom : newPinCoordinates.y;
+
       // Применение новых координат к указателю
       mapPinMain.style.top = newPinCoordinates.y + 'px';
 
-      // Минимальная координата указателя по горизонтали
-      var minXcoordinate = 0;
-      // Минимальная координата указателя по вертикали
-      var maxXcoordinate = parseInt(getComputedStyle(map).getPropertyValue('width'), 10);
-
       // Проверка нахождения указателя в пределах ограничений по горизонтали
       // с учётом горизонтальных размеров указателя
-      if (newPinCoordinates.x <= minXcoordinate + pinHeadWidth) {
-        newPinCoordinates.x = minXcoordinate + pinHeadWidth;
-      } else if (newPinCoordinates.x >= maxXcoordinate - pinHeadWidth) {
-        newPinCoordinates.x = maxXcoordinate - pinHeadWidth;
-      }
+      var leftEdge = newPinCoordinates.x <= pinPositionLimit.left;
+      var rightEdge = newPinCoordinates.x >= pinPositionLimit.right;
+
+      newPinCoordinates.x = leftEdge ? pinPositionLimit.left : newPinCoordinates.x;
+      newPinCoordinates.x = rightEdge ? pinPositionLimit.right : newPinCoordinates.x;
+
       // Применение новых координат к указателю
       mapPinMain.style.left = newPinCoordinates.x + 'px';
       window.form.setAddressCoordinates(newPinCoordinates);

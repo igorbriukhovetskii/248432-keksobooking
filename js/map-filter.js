@@ -44,13 +44,15 @@
      * @return {boolean}
      */
     return function (pin) {
+      var price = pin.dataset.price;
+
       switch (filterValue.value) {
         case 'low':
-          return pin.dataset.price < MINIMAL_PRICE;
+          return price < MINIMAL_PRICE;
         case 'middle':
-          return pin.dataset.price >= MINIMAL_PRICE && pin.dataset.price <= MAXIMAL_PRICE;
+          return price >= MINIMAL_PRICE && price <= MAXIMAL_PRICE;
         case 'high':
-          return pin.dataset.price > MAXIMAL_PRICE;
+          return price > MAXIMAL_PRICE;
         default:
           return true;
       }
@@ -80,11 +82,7 @@
       });
 
       // Поиск наличия удобств
-      if (checkedFeatures.length) {
-        return pin.dataset.features.match(regExp);
-      } else {
-        return true;
-      }
+      return checkedFeatures.length ? pin.dataset.features.match(regExp) : true;
     };
   };
 
