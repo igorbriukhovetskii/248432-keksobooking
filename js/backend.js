@@ -73,6 +73,9 @@
     errorBlock.classList.add('error-message');
 
     document.body.insertAdjacentElement('afterbegin', errorBlock);
+    setTimeout(function () {
+      document.body.removeChild(errorBlock);
+    }, 3000);
   };
 
   /**

@@ -94,7 +94,7 @@
               <img src="img/muffin.png" alt="Аватар пользователя"  width="40" height="44">
             </div>
             <input type="file" id="avatar">
-            <label class="drop-zone" for="avatar">Загрузите или&nbsp;перетащите сюда фото</label>
+            <label class="drop-zone" for="avatar" id="avatar-drop-zone">Загрузите или&nbsp;перетащите сюда фото</label>
             <p class="notice__info">Заполните все обязательные поля, назначьте цену, загрузите фотографии. Придумайте интересное описание. Оно сделает объявление более живым и привлекательным. Получившееся объявление должно давать гостям полное представление о вашем жилье.</p>
           </div>
         </div>
@@ -190,8 +190,8 @@
         <label>Фотографии жилья</label>
         <div class="form__photo-container">
           <div class="upload">
-            <input type="file" id="images">
-            <label for="images" class="drop-zone">Загрузите или&nbsp;перетащите сюда фото</label>
+            <input type="file" id="images" name="images">
+            <label for="images" class="drop-zone" id="images-drop-zone">Загрузите или&nbsp;перетащите сюда фото</label>
           </div>
         </div>
       </fieldset>
@@ -243,6 +243,11 @@
   </article>
 
   <button style="left: 200px; top: 400px;" class="map__pin"><img src="img/avatars/user07.png" width="40" height="40" draggable="false"></button>
+
+  <li class="gallery__item">
+    <img src="" class="gallery__image">
+    <button type="button" class="gallery__close-btn">X</button>
+  </li>
 </template>
 
 <script src="js/util.js"></script>
@@ -252,6 +257,7 @@
 <script src="js/show-card.js"></script>
 <script src="js/synchronize-fields.js"></script>
 <script src="js/form.js"></script>
+<script src="js/photo.js"></script>
 <script src="js/map-filter.js"></script>
 <script src="js/map.js"></script>
 </body>

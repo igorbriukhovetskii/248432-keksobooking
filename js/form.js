@@ -104,11 +104,11 @@
 
   // Управление селектами выбора количества комнат и гостей
   var manageGuestNumber = function (event) {
-    // Отключение недоступных вариантов в селекте выбора количества гостей
-    disableGuestsOptions();
     // Синхронизация количества комнат с количеством гостей
     if (event.target === roomsValueSelect || event.type === 'DOMContentLoaded') {
       window.synchronizeFields(roomsValueSelect, capacitySelect, roomsValue, maxGuests, setValue);
+      // Отключение недоступных вариантов в селекте выбора количества гостей
+      disableGuestsOptions();
     }
   };
 
@@ -155,18 +155,39 @@
     validateTitleField();
   };
 
+  // Получение кнопки сброса формы
+  var resetButton = noticeForm.querySelector('.form__reset');
+
   // Сброс формы объявления в исходное состояние
   var resetForm = function () {
     noticeForm.reset();
-    disableGuestsOptions();
+    // Синхронизация количества комнат с количеством гостей
     window.synchronizeFields(roomsValueSelect, capacitySelect, roomsValue, maxGuests, setValue);
+    // Отключение недопустимых полей для количества гостей
+    disableGuestsOptions();
+    // Получение и вставка в поле адреса координат главного указателя карты
     window.form.setAddressCoordinates(window.map.getAddressCoordinates());
+    // Удаление загруженных изображений
+    window.photo.resetFormImages();
+    // Добавление контейнера для предпросмотра загруженных изображений
+    window.photo.initializeGallery();
   };
+
+  // Обработчик успешной отправки формы
+  var onSuccesSubmit = function () {
+    window.util.showMessage('Данные формы успешно отправлены');
+    resetForm();
+  };
+
+  resetButton.addEventListener('click', function () {
+    event.preventDefault();
+    resetForm();
+  }, false);
 
   // Обработчик события отправки формы
   var onNoticeFormSubmit = function (event) {
     var data = new FormData(noticeForm);
-    window.backend.upload(data, resetForm, window.backend.onError);
+    window.backend.upload(data, onSuccesSubmit, window.backend.onError);
     event.preventDefault();
   };
 
@@ -178,6 +199,8 @@
     });
     // Очистка поля ввода заголовка формы, т. к. Edge игнорирует autocomplete='off'
     setValue(noticeFormTitleField, '');
+    // Добавление контейнера для предпросмотра загруженных изображений
+    window.photo.initializeGallery();
     noticeForm.addEventListener('change', onNoticeFormChange, false);
     noticeFormTitleField.addEventListener('input', onTitleFieldInput, false);
     noticeForm.addEventListener('submit', function (event) {

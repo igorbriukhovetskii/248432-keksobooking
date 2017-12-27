@@ -80,12 +80,27 @@
     lastDebounceTimeout = setTimeout(callback, DEBOUNCE_TIMEOUT);
   };
 
+  /**
+   * Показ информационного сообщения
+   * @param {string} text
+   */
+  var showMessage = function (text) {
+    var message = document.createElement('div');
+    message.innerText = text;
+    document.body.insertAdjacentElement('afterbegin', message);
+    message.classList.add('info-message');
+    setTimeout(function () {
+      document.body.removeChild(message);
+    }, 3000);
+  };
+
   window.util = {
     getDocumentFragment: getDocumentFragment,
     getSelectElementOptions: getSelectElementOptions,
     getObjectValues: getObjectValues,
     hideElements: hideElements,
     showElements: showElements,
-    debounce: debounce
+    debounce: debounce,
+    showMessage: showMessage
   };
 }());

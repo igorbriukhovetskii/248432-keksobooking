@@ -3,7 +3,7 @@ body
     font-family: Roboto, Arial, sans-serif;
     font-size: 16px;
 
-    max-width: 1200px;
+    width: 1200px;
     margin: 0 auto;
 
     color: #353535;
@@ -296,6 +296,7 @@ textarea:focus
     height: 65px;
 
     cursor: move;
+    z-index: 2;
 }
 
 .map__pin--main img
@@ -600,6 +601,8 @@ textarea:focus
 
 .notice__preview img
 {
+    width: 40px;
+    height: auto;
     vertical-align: middle;
 }
 
@@ -731,6 +734,58 @@ textarea:focus
     width: 140px;
 }
 
+.gallery {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    margin: 0;
+    padding: 15px 0;
+
+    list-style: none;
+}
+
+.gallery__item {
+    position: relative;
+    width: 70px;
+    margin-bottom: 5px;
+}
+
+.gallery__item--wide {
+  width: 140px;
+}
+
+.gallery__image {
+    width: 100%;
+    height: auto;
+}
+
+.gallery__close-btn {
+    display: none;
+    position: absolute;
+
+    top: -15px;
+    right: -15px;
+
+    width: 30px;
+    height: 30px;
+
+    justify-content: center;
+    align-items: center;
+
+    z-index: 1;
+
+    border: 1px solid #343434;
+    border-radius: 50%;
+
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.gallery__item:hover .gallery__close-btn {
+    display: flex;
+}
+
 .form__element--submit
 {
     width: 100%;
@@ -849,13 +904,33 @@ textarea:focus
 }
 
 .error-message {
-  position: fixed;
-  z-index: 10;
-  top: 0;
-  left: 0;
-  width: 100%;
-  text-align: center;
-  color: #ff0000;
-  font-size: 20px;
-  background-color: #deb887;
+    position: fixed;
+    z-index: 10;
+    top: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    color: #ff0000;
+    font-size: 20px;
+    background-color: #deb887;
+}
+
+.info-message {
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    height: 200px;
+    border-radius: 20px;
+    border: 5px solid #face80;
+    color: #2623ee;
+    font-size: 30px;
+    font-weight: bold;
+    background-color: #f0f0ea;
+    text-align: center;
 }

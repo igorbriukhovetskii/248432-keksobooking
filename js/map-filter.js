@@ -29,7 +29,7 @@
      * @return {boolean}
      */
     return function (pin) {
-      return pin.dataset[dataName] === filterValue.value ? true : filterValue.value === 'any';
+      return (pin.dataset[dataName] === filterValue.value) || (filterValue.value === 'any');
     };
   };
 
